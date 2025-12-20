@@ -1,0 +1,75 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4xr3dx8pvwxc"]
+
+[ext_resource type="PackedScene" uid="uid://ckr8qw4nf4qoj" path="res://scenes/player.tscn" id="1_main"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
+size = Vector2(2000, 64)
+
+[node name="Main" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1_main")]
+position = Vector2(200, 400)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(1.5, 1.5)
+
+[node name="Ground" type="StaticBody2D" parent="."]
+position = Vector2(640, 680)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+shape = SubResource("RectangleShape2D_ground")
+
+[node name="GroundVisual" type="ColorRect" parent="Ground"]
+offset_left = -1000.0
+offset_top = -32.0
+offset_right = 1000.0
+offset_bottom = 32.0
+color = Color(0.4, 0.3, 0.2, 1)
+
+[node name="Platform1" type="StaticBody2D" parent="."]
+position = Vector2(400, 500)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
+position = Vector2(0, 0)
+shape = SubResource("RectangleShape2D_ground")
+scale = Vector2(0.3, 0.5)
+
+[node name="PlatformVisual" type="ColorRect" parent="Platform1"]
+offset_left = -300.0
+offset_top = -16.0
+offset_right = 300.0
+offset_bottom = 16.0
+color = Color(0.5, 0.5, 0.5, 1)
+scale = Vector2(0.3, 1)
+
+[node name="Platform2" type="StaticBody2D" parent="."]
+position = Vector2(700, 400)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
+position = Vector2(0, 0)
+shape = SubResource("RectangleShape2D_ground")
+scale = Vector2(0.25, 0.5)
+
+[node name="PlatformVisual" type="ColorRect" parent="Platform2"]
+offset_left = -250.0
+offset_top = -16.0
+offset_right = 250.0
+offset_bottom = 16.0
+color = Color(0.5, 0.5, 0.5, 1)
+scale = Vector2(0.25, 1)
+
+[node name="Platform3" type="StaticBody2D" parent="."]
+position = Vector2(1000, 350)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
+position = Vector2(0, 0)
+shape = SubResource("RectangleShape2D_ground")
+scale = Vector2(0.2, 0.5)
+
+[node name="PlatformVisual" type="ColorRect" parent="Platform3"]
+offset_left = -200.0
+offset_top = -16.0
+offset_right = 200.0
+offset_bottom = 16.0
+color = Color(0.5, 0.5, 0.5, 1)
+scale = Vector2(0.2, 1)

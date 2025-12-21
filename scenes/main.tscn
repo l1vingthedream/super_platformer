@@ -43,12 +43,11 @@ position = Vector2(0, 0)
 shape = SubResource("RectangleShape2D_platform1")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform1"]
-offset_left = -300.0
+offset_left = -90.0
 offset_top = -16.0
-offset_right = 300.0
+offset_right = 90.0
 offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)
-scale = Vector2(0.3, 1)
 
 [node name="Platform2" type="StaticBody2D" parent="."]
 position = Vector2(700, 400)
@@ -58,12 +57,11 @@ position = Vector2(0, 0)
 shape = SubResource("RectangleShape2D_platform2")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform2"]
-offset_left = -250.0
+offset_left = -62.5
 offset_top = -16.0
-offset_right = 250.0
+offset_right = 62.5
 offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)
-scale = Vector2(0.25, 1)
 
 [node name="Platform3" type="StaticBody2D" parent="."]
 position = Vector2(1000, 350)
@@ -73,9 +71,8 @@ position = Vector2(0, 0)
 shape = SubResource("RectangleShape2D_platform3")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform3"]
-offset_left = -200.0
+offset_left = -40.0
 offset_top = -16.0
-offset_right = 200.0
+offset_right = 40.0
 offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)
-scale = Vector2(0.2, 1)

@@ -23,7 +23,7 @@ position = Vector2(200, 400)
 zoom = Vector2(1.5, 1.5)
 
 [node name="Ground" type="StaticBody2D" parent="."]
-position = Vector2(640, 688)
+position = Vector2(640, 856)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
 shape = SubResource("RectangleShape2D_ground")
@@ -36,7 +36,7 @@ offset_bottom = 32.0
 color = Color(0.4, 0.3, 0.2, 1)
 
 [node name="Platform1" type="StaticBody2D" parent="."]
-position = Vector2(400, 576)
+position = Vector2(400, 744)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
 position = Vector2(0, 0)
@@ -50,7 +50,7 @@ offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)
 
 [node name="Platform2" type="StaticBody2D" parent="."]
-position = Vector2(700, 544)
+position = Vector2(700, 712)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
 position = Vector2(0, 0)
@@ -64,7 +64,7 @@ offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)
 
 [node name="Platform3" type="StaticBody2D" parent="."]
-position = Vector2(1000, 544)
+position = Vector2(1000, 712)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
 position = Vector2(0, 0)

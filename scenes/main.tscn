@@ -20,7 +20,7 @@ size = Vector2(80, 32)
 position = Vector2(200, 400)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-zoom = Vector2(1.5, 1.5)
+zoom = Vector2(3, 3)
 
 [node name="Ground" type="StaticBody2D" parent="."]
 position = Vector2(640, 1016)
@@ -39,7 +39,6 @@ color = Color(0.4, 0.3, 0.2, 1)
 position = Vector2(400, 904)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
-position = Vector2(0, 0)
 shape = SubResource("RectangleShape2D_platform1")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform1"]
@@ -53,7 +52,6 @@ color = Color(0.5, 0.5, 0.5, 1)
 position = Vector2(700, 872)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
-position = Vector2(0, 0)
 shape = SubResource("RectangleShape2D_platform2")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform2"]
@@ -67,7 +65,6 @@ color = Color(0.5, 0.5, 0.5, 1)
 position = Vector2(1000, 872)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
-position = Vector2(0, 0)
 shape = SubResource("RectangleShape2D_platform3")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform3"]

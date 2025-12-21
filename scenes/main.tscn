@@ -6,13 +6,13 @@
 size = Vector2(2000, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform1"]
-size = Vector2(180, 48)
+size = Vector2(180, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform2"]
-size = Vector2(125, 48)
+size = Vector2(125, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform3"]
-size = Vector2(80, 48)
+size = Vector2(80, 32)
 
 [node name="Main" type="Node2D"]
 
@@ -36,7 +36,7 @@ offset_bottom = 32.0
 color = Color(0.4, 0.3, 0.2, 1)
 
 [node name="Platform1" type="StaticBody2D" parent="."]
-position = Vector2(400, 584)
+position = Vector2(400, 600)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
 position = Vector2(0, 0)
@@ -44,13 +44,13 @@ shape = SubResource("RectangleShape2D_platform1")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform1"]
 offset_left = -90.0
-offset_top = -24.0
+offset_top = -16.0
 offset_right = 90.0
-offset_bottom = 24.0
+offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)
 
 [node name="Platform2" type="StaticBody2D" parent="."]
-position = Vector2(700, 504)
+position = Vector2(700, 536)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
 position = Vector2(0, 0)
@@ -58,13 +58,13 @@ shape = SubResource("RectangleShape2D_platform2")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform2"]
 offset_left = -62.5
-offset_top = -24.0
+offset_top = -16.0
 offset_right = 62.5
-offset_bottom = 24.0
+offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)
 
 [node name="Platform3" type="StaticBody2D" parent="."]
-position = Vector2(1000, 504)
+position = Vector2(1000, 536)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
 position = Vector2(0, 0)
@@ -72,7 +72,7 @@ shape = SubResource("RectangleShape2D_platform3")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform3"]
 offset_left = -40.0
-offset_top = -24.0
+offset_top = -16.0
 offset_right = 40.0
-offset_bottom = 24.0
+offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)

@@ -36,7 +36,7 @@ offset_bottom = 32.0
 color = Color(0.4, 0.3, 0.2, 1)
 
 [node name="Platform1" type="StaticBody2D" parent="."]
-position = Vector2(400, 500)
+position = Vector2(400, 584)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
 position = Vector2(0, 0)
@@ -50,7 +50,7 @@ offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)
 
 [node name="Platform2" type="StaticBody2D" parent="."]
-position = Vector2(700, 400)
+position = Vector2(700, 504)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
 position = Vector2(0, 0)
@@ -64,7 +64,7 @@ offset_bottom = 16.0
 color = Color(0.5, 0.5, 0.5, 1)
 
 [node name="Platform3" type="StaticBody2D" parent="."]
-position = Vector2(1000, 350)
+position = Vector2(1000, 504)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
 position = Vector2(0, 0)

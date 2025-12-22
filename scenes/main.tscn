@@ -1,9 +1,14 @@
-[gd_scene load_steps=6 format=3 uid="uid://b4xr3dx8pvwxc"]
+[gd_scene load_steps=8 format=3 uid="uid://b4xr3dx8pvwxc"]
 
 [ext_resource type="PackedScene" uid="uid://ckr8qw4nf4qoj" path="res://scenes/player.tscn" id="1_main"]
+[ext_resource type="Texture2D" uid="uid://c8hf7g6e5d4c3" path="res://assets/sprites/Tileset.png" id="2_tileset"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(2000, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ground_tile"]
+atlas = ExtResource("2_tileset")
+region = Rect2(0, 16, 16, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform1"]
 size = Vector2(180, 32)
@@ -28,12 +33,13 @@ position = Vector2(640, 1016)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
 shape = SubResource("RectangleShape2D_ground")
 
-[node name="GroundVisual" type="ColorRect" parent="Ground"]
+[node name="GroundVisual" type="TextureRect" parent="Ground"]
 offset_left = -1000.0
 offset_top = -32.0
 offset_right = 1000.0
 offset_bottom = 32.0
-color = Color(0.4, 0.3, 0.2, 1)
+texture = SubResource("AtlasTexture_ground_tile")
+stretch_mode = 2
 
 [node name="Platform1" type="StaticBody2D" parent="."]
 position = Vector2(400, 904)

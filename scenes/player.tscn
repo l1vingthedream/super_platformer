@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://ckr8qw4nf4qoj"]
+[gd_scene load_steps=10 format=3 uid="uid://ckr8qw4nf4qoj"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
 [ext_resource type="Texture2D" uid="uid://c2r3wkp8dfwdg" path="res://assets/sprites/Playable_Characters_1P_2P.png" id="2_sprite"]
@@ -21,6 +21,14 @@ region = Rect2(38, 8, 16, 16)
 [sub_resource type="AtlasTexture" id="AtlasTexture_4"]
 atlas = ExtResource("2_sprite")
 region = Rect2(56, 8, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jump"]
+atlas = ExtResource("2_sprite")
+region = Rect2(96, 8, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_turn"]
+atlas = ExtResource("2_sprite")
+region = Rect2(76, 8, 16, 16)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1"]
 animations = [{
@@ -48,6 +56,22 @@ animations = [{
 "loop": true,
 "name": &"walk",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jump")
+}],
+"loop": false,
+"name": &"jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_turn")
+}],
+"loop": false,
+"name": &"turn",
+"speed": 5.0
 }]
 
 [node name="Player" type="CharacterBody2D"]

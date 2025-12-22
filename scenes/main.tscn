@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://b4xr3dx8pvwxc"]
+[gd_scene load_steps=9 format=3 uid="uid://b4xr3dx8pvwxc"]
 
 [ext_resource type="PackedScene" uid="uid://ckr8qw4nf4qoj" path="res://scenes/player.tscn" id="1_main"]
 [ext_resource type="Texture2D" uid="uid://c8hf7g6e5d4c3" path="res://assets/sprites/Tileset.png" id="2_tileset"]
@@ -6,9 +6,29 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(2000, 64)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_ground_tile"]
-atlas = ExtResource("2_tileset")
-region = Rect2(0, 16, 16, 16)
+[sub_resource type="Shader" id="Shader_tile"]
+code = "shader_type canvas_item;
+
+uniform sampler2D tileset : filter_nearest;
+uniform vec2 tile_offset;
+uniform vec2 tile_size;
+uniform vec2 rect_size;
+
+void fragment() {
+    vec2 tileset_size = vec2(textureSize(tileset, 0));
+    vec2 tiles_count = rect_size / tile_size;
+    vec2 tiled_uv = fract(UV * tiles_count);
+    vec2 atlas_uv = (tile_offset + tiled_uv * tile_size) / tileset_size;
+    COLOR = texture(tileset, atlas_uv);
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ground"]
+shader = SubResource("Shader_tile")
+shader_parameter/tile_offset = Vector2(0, 16)
+shader_parameter/tile_size = Vector2(16, 16)
+shader_parameter/rect_size = Vector2(2000, 64)
+shader_parameter/tileset = ExtResource("2_tileset")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform1"]
 size = Vector2(180, 32)
@@ -33,14 +53,12 @@ position = Vector2(640, 1016)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
 shape = SubResource("RectangleShape2D_ground")
 
-[node name="GroundVisual" type="TextureRect" parent="Ground"]
+[node name="GroundVisual" type="ColorRect" parent="Ground"]
+material = SubResource("ShaderMaterial_ground")
 offset_left = -1000.0
 offset_top = -32.0
 offset_right = 1000.0
 offset_bottom = 32.0
-texture = SubResource("AtlasTexture_ground_tile")
-expand_mode = 1
-stretch_mode = 1
 
 [node name="Platform1" type="StaticBody2D" parent="."]
 position = Vector2(400, 904)

@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://b4xr3dx8pvwxc"]
+[gd_scene load_steps=13 format=3 uid="uid://b4xr3dx8pvwxc"]
 
 [ext_resource type="PackedScene" uid="uid://ckr8qw4nf4qoj" path="res://scenes/player.tscn" id="1_main"]
 [ext_resource type="Texture2D" uid="uid://c8hf7g6e5d4c3" path="res://assets/sprites/Tileset.png" id="2_tileset"]
+[ext_resource type="Script" path="res://scripts/camera.gd" id="3_camera"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ground"]
 size = Vector2(2000, 32)
@@ -65,8 +66,9 @@ shader_parameter/tileset = ExtResource("2_tileset")
 [node name="Player" parent="." instance=ExtResource("1_main")]
 position = Vector2(200, 400)
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
+[node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(3, 3)
+script = ExtResource("3_camera")
 
 [node name="Ground" type="StaticBody2D" parent="."]
 position = Vector2(640, 1016)
@@ -82,7 +84,7 @@ offset_right = 1000.0
 offset_bottom = 16.0
 
 [node name="Platform1" type="StaticBody2D" parent="."]
-position = Vector2(400, 912)
+position = Vector2(400, 944)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
 shape = SubResource("RectangleShape2D_platform1")

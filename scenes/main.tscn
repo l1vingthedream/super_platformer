@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://b4xr3dx8pvwxc"]
+[gd_scene load_steps=12 format=3 uid="uid://b4xr3dx8pvwxc"]
 
 [ext_resource type="PackedScene" uid="uid://ckr8qw4nf4qoj" path="res://scenes/player.tscn" id="1_main"]
 [ext_resource type="Texture2D" uid="uid://c8hf7g6e5d4c3" path="res://assets/sprites/Tileset.png" id="2_tileset"]
@@ -31,13 +31,34 @@ shader_parameter/rect_size = Vector2(2000, 32)
 shader_parameter/tileset = ExtResource("2_tileset")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform1"]
-size = Vector2(180, 32)
+size = Vector2(180, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform2"]
-size = Vector2(125, 32)
+size = Vector2(125, 16)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_platform3"]
-size = Vector2(80, 32)
+size = Vector2(80, 16)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_platform1"]
+shader = SubResource("Shader_tile")
+shader_parameter/tile_offset = Vector2(17, 16)
+shader_parameter/tile_size = Vector2(16, 16)
+shader_parameter/rect_size = Vector2(180, 16)
+shader_parameter/tileset = ExtResource("2_tileset")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_platform2"]
+shader = SubResource("Shader_tile")
+shader_parameter/tile_offset = Vector2(17, 16)
+shader_parameter/tile_size = Vector2(16, 16)
+shader_parameter/rect_size = Vector2(125, 16)
+shader_parameter/tileset = ExtResource("2_tileset")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_platform3"]
+shader = SubResource("Shader_tile")
+shader_parameter/tile_offset = Vector2(17, 16)
+shader_parameter/tile_size = Vector2(16, 16)
+shader_parameter/rect_size = Vector2(80, 16)
+shader_parameter/tileset = ExtResource("2_tileset")
 
 [node name="Main" type="Node2D"]
 
@@ -61,40 +82,40 @@ offset_right = 1000.0
 offset_bottom = 16.0
 
 [node name="Platform1" type="StaticBody2D" parent="."]
-position = Vector2(400, 904)
+position = Vector2(400, 912)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform1"]
 shape = SubResource("RectangleShape2D_platform1")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform1"]
+material = SubResource("ShaderMaterial_platform1")
 offset_left = -90.0
-offset_top = -16.0
+offset_top = -8.0
 offset_right = 90.0
-offset_bottom = 16.0
-color = Color(0.5, 0.5, 0.5, 1)
+offset_bottom = 8.0
 
 [node name="Platform2" type="StaticBody2D" parent="."]
-position = Vector2(700, 872)
+position = Vector2(700, 880)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform2"]
 shape = SubResource("RectangleShape2D_platform2")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform2"]
+material = SubResource("ShaderMaterial_platform2")
 offset_left = -62.5
-offset_top = -16.0
+offset_top = -8.0
 offset_right = 62.5
-offset_bottom = 16.0
-color = Color(0.5, 0.5, 0.5, 1)
+offset_bottom = 8.0
 
 [node name="Platform3" type="StaticBody2D" parent="."]
-position = Vector2(1000, 872)
+position = Vector2(1000, 880)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platform3"]
 shape = SubResource("RectangleShape2D_platform3")
 
 [node name="PlatformVisual" type="ColorRect" parent="Platform3"]
+material = SubResource("ShaderMaterial_platform3")
 offset_left = -40.0
-offset_top = -16.0
+offset_top = -8.0
 offset_right = 40.0
-offset_bottom = 16.0
-color = Color(0.5, 0.5, 0.5, 1)
+offset_bottom = 8.0

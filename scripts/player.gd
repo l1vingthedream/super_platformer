@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 const SPEED = 300.0
 const JUMP_VELOCITY = -350.0
-const TURN_FRAMES = 20
+const TURN_FRAMES = 5
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var turn_timer = 0

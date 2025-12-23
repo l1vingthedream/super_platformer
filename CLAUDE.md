@@ -24,9 +24,11 @@ scenes/           Scene files (.tscn)
 scripts/         GDScript files (.gd)
   player.gd      Player movement, physics, and animation logic
   camera.gd      Camera controller (horizontal follow, fixed vertical)
-assets/sprites/  Sprite sheets and textures
-  Playable_Characters_1P_2P.png  Player sprite sheet
-  Tileset.png                    Ground/platform tile textures
+assets/
+  sprites/       Sprite sheets and textures
+    Playable_Characters_1P_2P.png  Player sprite sheet
+    Raw_Tileset.png                Tileset (16x16 tiles, 1px separation)
+  tileset.tres   TileSet resource with physics collisions
 ```
 
 ## Architecture
@@ -35,12 +37,14 @@ assets/sprites/  Sprite sheets and textures
 - **main.tscn** is the entry point containing:
   - Player instance (from player.tscn)
   - Camera2D with camera.gd script (sibling of Player, not child)
-  - Ground and platform StaticBody2D nodes with shader-based tiled textures
+  - BackgroundLayer (TileMapLayer, z_index=-1) for decorative tiles
+  - TileMapLayer for ground/platforms with physics collisions
 
 ### Player System
 - **player.tscn**: CharacterBody2D with CollisionShape2D and AnimatedSprite2D
+  - collision_layer = 1 (player), collision_mask = 2 (world)
 - **player.gd**: Physics-based movement controller with animation state machine
-  - Constants: SPEED (300.0), JUMP_VELOCITY (-350.0), TURN_FRAMES (20)
+  - Constants: SPEED (300.0), JUMP_VELOCITY (-350.0), TURN_FRAMES (5)
   - Animations: idle, walk (4 frames), jump, turn
   - Turn detection uses persistent `last_move_direction` tracking (not velocity-based)
   - Sprite regions extracted via AtlasTexture from sprite sheet
@@ -48,12 +52,15 @@ assets/sprites/  Sprite sheets and textures
 ### Camera System
 - **camera.gd**: Follows player horizontally, locks ground to bottom of display
   - Calculates fixed Y position based on ground_bottom and viewport/zoom
-  - Ground bottom locked at y=1032
+  - Ground bottom locked at y=0 (bottom of TileMapLayer)
 
-### Tile Rendering
-- Ground and platforms use ColorRect with ShaderMaterial for tiled textures
-- Custom shader samples from Tileset.png atlas regions and tiles across rect size
-- Shader uniforms: tile_offset, tile_size, rect_size, tileset
+### Tile System
+- **tileset.tres**: TileSet resource using Raw_Tileset.png
+  - 16x16 pixel tiles with 1px separation
+  - Physics layer 0: collision_layer = 2 (world), collision_mask = 0
+  - Collision polygons defined per-tile for solid tiles
+- **TileMapLayer**: Main gameplay layer with ground/platforms
+- **BackgroundLayer**: Decorative layer (z_index=-1) for clouds, hills, etc.
 
 ### Input Actions
 Configured in project.godot under `[input]`:

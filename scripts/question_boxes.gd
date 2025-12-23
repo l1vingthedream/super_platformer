@@ -88,29 +88,21 @@ func hit_box(tile_coords: Vector2i):
 	# Mark as hit
 	hit_boxes[tile_coords] = true
 
-	print("DEBUG: Before set_cell - Atlas at ", tile_coords, ": ", get_cell_atlas_coords(tile_coords))
+	print("DEBUG: Hit box at: ", tile_coords)
 
-	# Change tile to empty box on THIS layer
-	set_cell(tile_coords, 0, EMPTY_BOX_ATLAS)
+	# Immediately ERASE the tiles (make invisible) so only the bounce sprite shows
+	print("DEBUG: Erasing tiles during bounce")
+	erase_cell(tile_coords)
 
-	print("DEBUG: After set_cell - Atlas at ", tile_coords, ": ", get_cell_atlas_coords(tile_coords))
-	print("DEBUG: set_cell called with source_id=0, atlas_coords=", EMPTY_BOX_ATLAS)
-
-	# Also change tile on the other layer if it exists
+	# Also erase on the other layer if it exists
 	if other_layer:
 		var other_atlas = other_layer.get_cell_atlas_coords(tile_coords)
-		print("DEBUG: TileMapLayer2 before - Atlas at ", tile_coords, ": ", other_atlas)
 		if other_atlas == QUESTION_BOX_ATLAS:
-			other_layer.set_cell(tile_coords, 0, EMPTY_BOX_ATLAS)
-			print("DEBUG: TileMapLayer2 after - Atlas at ", tile_coords, ": ", other_layer.get_cell_atlas_coords(tile_coords))
-		else:
-			print("DEBUG: TileMapLayer2 doesn't have question box at this position")
+			other_layer.erase_cell(tile_coords)
+			print("DEBUG: Erased TileMapLayer2 tile")
 
-	# Play bounce animation
+	# Now play bounce animation (will restore empty box tile after bounce)
 	bounce_box(tile_coords)
-
-	# Debug
-	print("Hit box at: ", tile_coords)
 
 func bounce_box(tile_coords: Vector2i):
 	# Create temporary sprite for animation
@@ -161,5 +153,19 @@ func bounce_box(tile_coords: Vector2i):
 		BOUNCE_DURATION / 2.0
 	)
 
-	# Clean up sprite when animation completes
-	tween.tween_callback(sprite.queue_free)
+	# When animation completes: set empty box tiles and clean up sprite
+	tween.tween_callback(func():
+		print("DEBUG: Bounce complete - setting empty box tiles")
+
+		# Now set the tile to empty box on THIS layer
+		set_cell(tile_coords, 0, EMPTY_BOX_ATLAS)
+		print("DEBUG: Set TileMapLayer to empty box at ", tile_coords)
+
+		# Also set on the other layer if it exists
+		if other_layer:
+			other_layer.set_cell(tile_coords, 0, EMPTY_BOX_ATLAS)
+			print("DEBUG: Set TileMapLayer2 to empty box")
+
+		# Clean up the bounce sprite
+		sprite.queue_free()
+	)

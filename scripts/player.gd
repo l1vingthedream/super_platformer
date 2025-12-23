@@ -6,6 +6,7 @@ const TURN_FRAMES = 20
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var turn_timer = 0
+var last_move_direction = 0  # -1 for left, 1 for right, 0 for none
 
 @onready var animated_sprite = $AnimatedSprite2D
 
@@ -16,9 +17,6 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("jump") and is_on_floor():
 		velocity.y = JUMP_VELOCITY
 
-	var was_moving_right = velocity.x > 0
-	var was_moving_left = velocity.x < 0
-
 	var direction = Input.get_axis("move_left", "move_right")
 	if direction:
 		velocity.x = direction * SPEED
@@ -27,15 +25,19 @@ func _physics_process(delta):
 
 	move_and_slide()
 
-	# Animation logic
-	var is_turning = (was_moving_left and direction > 0) or (was_moving_right and direction < 0)
+	# Animation logic - detect turn based on persistent direction tracking
+	var is_turning = (last_move_direction == -1 and direction > 0) or (last_move_direction == 1 and direction < 0)
 
 	# Debug output
 	if direction != 0 or velocity.x != 0 or turn_timer > 0:
-		print("vel.x=", velocity.x, " dir=", direction, " was_L=", was_moving_left, " was_R=", was_moving_right, " is_turning=", is_turning, " timer=", turn_timer)
+		print("vel.x=", velocity.x, " dir=", direction, " last_dir=", last_move_direction, " is_turning=", is_turning, " timer=", turn_timer)
 
 	if is_turning:
 		turn_timer = TURN_FRAMES
+
+	# Update last_move_direction only when actively moving (not during turn animation)
+	if turn_timer == 0 and direction != 0:
+		last_move_direction = direction
 
 	if not is_on_floor():
 		animated_sprite.play("jump")

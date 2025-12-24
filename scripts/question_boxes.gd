@@ -3,6 +3,7 @@ extends TileMapLayer
 # Tile atlas coordinates
 const QUESTION_BOX_ATLAS = Vector2i(16, 2)
 const EMPTY_BOX_ATLAS = Vector2i(20, 2)
+const BRICK_ATLAS = Vector2i(1, 0)
 
 # Animation parameters
 const BOUNCE_HEIGHT = 6.0  # pixels
@@ -81,8 +82,12 @@ func check_box_collision():
 			hit_box(tile_coords)
 		else:
 			print("DEBUG: Box already hit")
+	# Check if it's a brick tile
+	elif atlas_coords == BRICK_ATLAS:
+		print("DEBUG: Hitting brick tile!")
+		bounce_brick(tile_coords)
 	else:
-		print("DEBUG: Not a question box, atlas is: ", atlas_coords)
+		print("DEBUG: Not a special tile, atlas is: ", atlas_coords)
 
 func hit_box(tile_coords: Vector2i):
 	# Mark as hit
@@ -165,6 +170,81 @@ func bounce_box(tile_coords: Vector2i):
 		if other_layer:
 			other_layer.set_cell(tile_coords, 0, EMPTY_BOX_ATLAS)
 			print("DEBUG: Set TileMapLayer2 to empty box")
+
+		# Clean up the bounce sprite
+		sprite.queue_free()
+	)
+
+func bounce_brick(tile_coords: Vector2i):
+	# Immediately ERASE the brick tile (make invisible) so only the bounce sprite shows
+	print("DEBUG: Erasing brick tile during bounce")
+	erase_cell(tile_coords)
+
+	# Also erase on the other layer if it exists
+	if other_layer:
+		var other_atlas = other_layer.get_cell_atlas_coords(tile_coords)
+		if other_atlas == BRICK_ATLAS:
+			other_layer.erase_cell(tile_coords)
+			print("DEBUG: Erased brick on TileMapLayer2")
+
+	# Create temporary sprite for animation
+	var sprite = Sprite2D.new()
+
+	# Get the tileset texture
+	var atlas_source = tile_set.get_source(0) as TileSetAtlasSource
+	sprite.texture = atlas_source.texture
+	sprite.region_enabled = true
+
+	# Calculate region rect for brick tile (1,0)
+	# Tileset has 1px separation: each tile occupies (16+1) pixels
+	var tile_pixel_x = BRICK_ATLAS.x * 17
+	var tile_pixel_y = BRICK_ATLAS.y * 17
+	sprite.region_rect = Rect2(tile_pixel_x, tile_pixel_y, 16, 16)
+
+	# Position sprite at tile location
+	# map_to_local gives us the CENTER of the tile in local coordinates
+	var tile_local_pos = map_to_local(tile_coords)
+
+	# sprite.centered is true by default, so sprite will be centered at this position
+	sprite.position = tile_local_pos
+
+	print("DEBUG: Brick bounce - tile_coords: ", tile_coords, " tile_local_pos: ", tile_local_pos)
+
+	# Add to scene (as child of TileMapLayer, so it uses local coordinates)
+	add_child(sprite)
+
+	# Create bounce animation
+	var tween = create_tween()
+	tween.set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_QUAD)
+
+	# Bounce up
+	tween.tween_property(
+		sprite,
+		"position:y",
+		sprite.position.y - BOUNCE_HEIGHT,
+		BOUNCE_DURATION / 2.0
+	)
+
+	# Bounce down
+	tween.set_ease(Tween.EASE_IN)
+	tween.tween_property(
+		sprite,
+		"position:y",
+		sprite.position.y,
+		BOUNCE_DURATION / 2.0
+	)
+
+	# When animation completes: restore brick tile and clean up sprite
+	tween.tween_callback(func():
+		print("DEBUG: Brick bounce complete - restoring brick tile")
+
+		# Restore the brick tile on THIS layer
+		set_cell(tile_coords, 0, BRICK_ATLAS)
+
+		# Also restore on the other layer if it exists
+		if other_layer:
+			other_layer.set_cell(tile_coords, 0, BRICK_ATLAS)
 
 		# Clean up the bounce sprite
 		sprite.queue_free()

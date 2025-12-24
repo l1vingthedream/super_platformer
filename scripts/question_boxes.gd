@@ -5,6 +5,9 @@ const QUESTION_BOX_ATLAS = Vector2i(16, 2)
 const EMPTY_BOX_ATLAS = Vector2i(20, 2)
 const BRICK_ATLAS = Vector2i(1, 0)
 
+# Item spawning
+const ITEM_SCENE = preload("res://scenes/item.tscn")
+
 # Animation parameters
 const BOUNCE_HEIGHT = 6.0  # pixels
 const BOUNCE_DURATION = 0.225  # seconds (increased by 50%: 0.15 * 1.5)
@@ -94,6 +97,17 @@ func hit_box(tile_coords: Vector2i):
 	hit_boxes[tile_coords] = true
 
 	print("DEBUG: Hit box at: ", tile_coords)
+
+	# Check if this box contains an item
+	var tile_data = get_cell_tile_data(tile_coords)
+	var item_type = ""
+	if tile_data:
+		item_type = tile_data.get_custom_data("item_type")
+		print("DEBUG: Item type: ", item_type)
+
+	# Spawn item if one exists
+	if item_type != "":
+		spawn_item(tile_coords, item_type)
 
 	# Immediately ERASE the tiles (make invisible) so only the bounce sprite shows
 	print("DEBUG: Erasing tiles during bounce")
@@ -249,3 +263,19 @@ func bounce_brick(tile_coords: Vector2i):
 		# Clean up the bounce sprite
 		sprite.queue_free()
 	)
+
+func spawn_item(tile_coords: Vector2i, item_type: String):
+	# Create item instance
+	var item = ITEM_SCENE.instantiate()
+
+	# Configure item type
+	item.configure(item_type)
+
+	# Position item at tile center
+	var tile_center = map_to_local(tile_coords)
+	item.global_position = to_global(tile_center)
+
+	# Add to Main scene (not TileMapLayer)
+	get_parent().add_child(item)
+
+	print("DEBUG: Spawned ", item_type, " at ", item.global_position)

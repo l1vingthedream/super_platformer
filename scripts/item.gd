@@ -6,13 +6,14 @@ var item_type: ItemType = ItemType.MUSHROOM
 
 # Physics constants
 const GRAVITY = 980.0  # Match project physics
-const MUSHROOM_SPEED = 100.0
+const MUSHROOM_SPEED = 75.0  # Reduced by 25%
 const STAR_BOUNCE_VELOCITY = -300.0
 const STAR_BOUNCE_HEIGHT = 32.0  # pixels from starting platform
 
 # Pop-up animation constants
-const POP_UP_DISTANCE = 16.0  # pixels
-const POP_UP_DURATION = 0.3   # seconds
+const POP_UP_DISTANCE = 16.0      # pixels (for physical items)
+const POP_UP_DURATION = 0.4       # seconds (reduced speed by 25%)
+const COIN_POP_DISTANCE = 56.0    # pixels (coin jumps higher)
 
 # State tracking
 var is_popping_up = true
@@ -31,9 +32,11 @@ const SPRITE_COORDS = {
 	ItemType.BEANSTALK: Vector2i(3, 1)
 }
 
-@onready var sprite = $Sprite2D
+@onready var sprite = $AnimatedSprite2D
 @onready var collision_shape = $CollisionShape2D
 @onready var player_detector = $PlayerDetector
+@onready var item_sound = $ItemSound
+@onready var coin_sound = $CoinSound
 
 func _ready():
 	# Disable collision during pop-up
@@ -46,19 +49,45 @@ func _ready():
 	pop_up()
 
 func setup_sprite():
-	var coords = SPRITE_COORDS[item_type]
-	# Calculate region rect (17 pixel stride: 16px tile + 1px separation)
-	var pixel_x = coords.x * 17
-	var pixel_y = coords.y * 17
-	sprite.region_rect = Rect2(pixel_x, pixel_y, 16, 16)
+	# Select and play animation based on item type
+	var animation_name = get_animation_name()
+	sprite.animation = animation_name
+	sprite.play()
 
-	print("DEBUG: Item sprite configured - type: ", item_type, " coords: ", coords, " region: ", sprite.region_rect)
+	print("DEBUG: Item sprite configured - type: ", item_type, " animation: ", animation_name)
+
+func get_animation_name() -> String:
+	match item_type:
+		ItemType.COIN:
+			return "coin"
+		ItemType.MUSHROOM:
+			return "mushroom"
+		ItemType.FLOWER:
+			return "flower"
+		ItemType.ONE_UP:
+			return "1up"
+		ItemType.STAR:
+			return "star"
+		ItemType.BEANSTALK:
+			return "beanstalk"
+		_:
+			return "mushroom"  # Default fallback
 
 func pop_up():
 	# Store starting position for star bounce calculations
 	starting_y_position = global_position.y
 
+	# Play spawn sound based on item type
+	match item_type:
+		ItemType.COIN:
+			coin_sound.play()
+		ItemType.MUSHROOM, ItemType.FLOWER, ItemType.ONE_UP, ItemType.STAR, ItemType.BEANSTALK:
+			item_sound.play()
+
 	print("DEBUG: Item pop-up starting from: ", global_position)
+
+	# Determine pop-up distance based on item type
+	var pop_distance = COIN_POP_DISTANCE if item_type == ItemType.COIN else POP_UP_DISTANCE
 
 	# Create tween for pop-up animation
 	var tween = create_tween()
@@ -69,9 +98,19 @@ func pop_up():
 	tween.tween_property(
 		self,
 		"global_position:y",
-		global_position.y - POP_UP_DISTANCE,
+		global_position.y - pop_distance,
 		POP_UP_DURATION
 	)
+
+	# COIN-SPECIFIC: Fade out during rise (parallel animation)
+	if item_type == ItemType.COIN:
+		# Add fade animation to the same tween (runs in parallel)
+		tween.parallel().tween_property(
+			sprite,
+			"modulate:a",
+			0.0,
+			POP_UP_DURATION
+		)
 
 	# When pop-up completes, enable physics and start behavior
 	tween.tween_callback(on_pop_up_complete)
@@ -148,12 +187,10 @@ func handle_star_physics(delta):
 		print("DEBUG: Star bounced")
 
 func play_coin_animation():
-	print("DEBUG: Playing coin animation")
+	print("DEBUG: Coin animation complete, removing coin")
 
-	# Animate coin disappearing
-	var tween = create_tween()
-	tween.tween_property(sprite, "modulate:a", 0.0, 0.3)
-	tween.tween_callback(queue_free)
+	# Coin already faded during pop_up, just clean up
+	queue_free()
 
 func _on_player_detected(body):
 	if is_collected or is_popping_up:

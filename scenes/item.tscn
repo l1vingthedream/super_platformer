@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://b8yqw4nf4item"]
+[gd_scene load_steps=17 format=3 uid="uid://b8yqw4nf4item"]
 
 [ext_resource type="Script" path="res://scripts/item.gd" id="1_item"]
 [ext_resource type="Texture2D" path="res://assets/sprites/Items_Objects_NPCs.png" id="2_sprite"]
+[ext_resource type="AudioStream" path="res://assets/audio/item.wav" id="3_item"]
+[ext_resource type="AudioStream" path="res://assets/audio/coin.wav" id="4_coin"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(16, 16)
@@ -9,14 +11,110 @@ size = Vector2(16, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
 size = Vector2(16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_coin1"]
+atlas = ExtResource("2_sprite")
+region = Rect2(153, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_coin2"]
+atlas = ExtResource("2_sprite")
+region = Rect2(170, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_coin3"]
+atlas = ExtResource("2_sprite")
+region = Rect2(187, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_coin4"]
+atlas = ExtResource("2_sprite")
+region = Rect2(204, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mushroom"]
+atlas = ExtResource("2_sprite")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_flower"]
+atlas = ExtResource("2_sprite")
+region = Rect2(17, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1up"]
+atlas = ExtResource("2_sprite")
+region = Rect2(0, 17, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_star"]
+atlas = ExtResource("2_sprite")
+region = Rect2(85, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_beanstalk"]
+atlas = ExtResource("2_sprite")
+region = Rect2(51, 17, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_items"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_coin1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_coin2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_coin3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_coin4")
+}],
+"loop": true,
+"name": &"coin",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mushroom")
+}],
+"loop": true,
+"name": &"mushroom",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_flower")
+}],
+"loop": true,
+"name": &"flower",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1up")
+}],
+"loop": true,
+"name": &"1up",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_star")
+}],
+"loop": true,
+"name": &"star",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_beanstalk")
+}],
+"loop": true,
+"name": &"beanstalk",
+"speed": 5.0
+}]
+
 [node name="Item" type="CharacterBody2D"]
 collision_layer = 4
 collision_mask = 2
 script = ExtResource("1_item")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_sprite")
-region_enabled = true
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_items")
+animation = &"mushroom"
 centered = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -29,5 +127,11 @@ collision_mask = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
 shape = SubResource("RectangleShape2D_2")
+
+[node name="ItemSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_item")
+
+[node name="CoinSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_coin")
 
 [connection signal="body_entered" from="PlayerDetector" to="." method="_on_player_detected"]

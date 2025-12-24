@@ -18,6 +18,7 @@ var hit_boxes: Dictionary = {}  # tile_coords -> bool
 # References
 @onready var player: CharacterBody2D = get_parent().get_node("Player")
 @onready var other_layer: TileMapLayer = get_parent().get_node("TileMapLayer2") if get_parent().has_node("TileMapLayer2") else null
+@onready var bump_sound = $BumpSound
 
 func _ready():
 	print("QuestionBoxes system initialized")
@@ -85,6 +86,10 @@ func check_box_collision():
 			hit_box(tile_coords)
 		else:
 			print("DEBUG: Box already hit")
+	# Check if it's an empty box (already hit)
+	elif atlas_coords == EMPTY_BOX_ATLAS:
+		print("DEBUG: Hitting empty box!")
+		bump_sound.play()
 	# Check if it's a brick tile
 	elif atlas_coords == BRICK_ATLAS:
 		print("DEBUG: Hitting brick tile!")
@@ -95,6 +100,9 @@ func check_box_collision():
 func hit_box(tile_coords: Vector2i):
 	# Mark as hit
 	hit_boxes[tile_coords] = true
+
+	# Play bump sound
+	bump_sound.play()
 
 	print("DEBUG: Hit box at: ", tile_coords)
 
@@ -273,7 +281,14 @@ func spawn_item(tile_coords: Vector2i, item_type: String):
 
 	# Position item at tile center
 	var tile_center = map_to_local(tile_coords)
-	item.global_position = to_global(tile_center)
+	var spawn_position = to_global(tile_center)
+
+	# COIN-SPECIFIC: Spawn at TOP of box instead of center
+	if item_type == "coin":
+		# Tiles are 16x16, so top of tile is 8 pixels above center
+		spawn_position.y -= 8.0
+
+	item.global_position = spawn_position
 
 	# Add to Main scene (not TileMapLayer)
 	get_parent().add_child(item)

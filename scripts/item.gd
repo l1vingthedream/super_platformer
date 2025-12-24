@@ -205,9 +205,18 @@ func collect():
 
 	# Apply item effect based on type
 	match item_type:
-		ItemType.MUSHROOM, ItemType.FLOWER:
-			# TODO: Power up player (when player state system exists)
-			print("Collected powerup!")
+		ItemType.MUSHROOM:
+			var player = get_tree().get_first_node_in_group("player")
+			if player and player.has_method("power_up"):
+				# Pass the PowerUpState enum value (need to reference it from player)
+				# PowerUpState.BIG = 1 in the enum
+				player.power_up(1)  # 1 = PowerUpState.BIG
+				print("Collected mushroom - powering up player!")
+			else:
+				print("ERROR: Could not find player or power_up method!")
+		ItemType.FLOWER:
+			# TODO: Fire state (PowerUpState.FIRE = 2)
+			print("Collected flower!")
 		ItemType.ONE_UP:
 			# TODO: Add extra life (when life system exists)
 			print("Collected 1-UP!")

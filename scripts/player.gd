@@ -27,6 +27,7 @@ var is_jumping = false
 @onready var jump_sound = $JumpSound
 @onready var jump_small_sound = $JumpSmallSound
 @onready var powerup_sound = $PowerUpSound
+@onready var big_jump_sound = $BigJumpSound
 
 func _ready():
 	# Make player discoverable by items
@@ -113,8 +114,12 @@ func _physics_process(delta):
 		is_jumping = true
 		jump_hold_time = 0.0
 
-		# Start with small jump sound (assume quick tap)
-		jump_small_sound.play()
+		# Big/Fire Mario: always play big jump sound immediately
+		if current_power_state >= PowerUpState.BIG:
+			big_jump_sound.play()
+		else:
+			# Small Mario: start with small jump sound (assume quick tap)
+			jump_small_sound.play()
 
 	# Reset jump state when landing
 	if is_on_floor():

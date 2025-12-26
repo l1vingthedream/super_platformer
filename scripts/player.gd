@@ -5,14 +5,24 @@ enum PowerUpState { SMALL, BIG, FIRE, INVINCIBLE }
 var current_power_state: PowerUpState = PowerUpState.SMALL
 var is_growing = false
 
-const SPEED = 300.0
+# Movement constants - Momentum-based system
+# Classic SMB values: Walk = 1.5px/frame, Run = 2.5px/frame @ 60fps
+const WALK_MAX_SPEED = 120.0        # Maximum walking speed (1.5 * 60fps)
+const RUN_MAX_SPEED = 200.0        # Maximum running speed (2.5 * 60fps) - 66.7% faster
+const GROUND_ACCELERATION = 2400.0  # Acceleration on ground
+const AIR_ACCELERATION = 600.0     # Reduced acceleration in air
+const GROUND_FRICTION = 2500.0     # Deceleration when no input
+const SKID_FRICTION = 3000.0       # Stronger friction when skidding (turning)
+
 const JUMP_VELOCITY = -350.0
 const TURN_FRAMES = 5
 const JUMP_HOLD_THRESHOLD = 0.1  # Time in seconds to distinguish short vs long jump
+const SKID_THRESHOLD = 200.0     # Speed threshold for skid animation
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 var turn_timer = 0
 var last_move_direction = 0  # -1 for left, 1 for right, 0 for none
+var is_skidding = false  # Track if player is skidding
 
 # Death system
 var is_dead = false
@@ -101,7 +111,7 @@ func _physics_process(delta):
 	# Control locking during growth animation
 	if is_growing:
 		# Maintain momentum but no new input
-		velocity.x = move_toward(velocity.x, 0, SPEED * 0.5)
+		velocity.x = move_toward(velocity.x, 0, GROUND_FRICTION * 0.5 * delta)
 		move_and_slide()
 		return  # Skip normal control logic
 
@@ -137,20 +147,44 @@ func _physics_process(delta):
 		is_jumping = false
 		jump_hold_time = 0.0
 
+	# Get input
 	var direction = Input.get_axis("move_left", "move_right")
-	if direction:
-		velocity.x = direction * SPEED
+	var is_running = Input.is_action_pressed("run")
+
+	# Determine max speed based on run button
+	var max_speed = RUN_MAX_SPEED if is_running else WALK_MAX_SPEED
+
+	# Determine acceleration based on ground state
+	var acceleration = GROUND_ACCELERATION if is_on_floor() else AIR_ACCELERATION
+
+	# Handle horizontal movement with momentum
+	if direction != 0:
+		# Check if trying to turn while moving fast (skidding)
+		var is_trying_to_turn = (velocity.x > SKID_THRESHOLD and direction < 0) or (velocity.x < -SKID_THRESHOLD and direction > 0)
+
+		if is_trying_to_turn and is_on_floor():
+			# Skidding - stronger friction to slow down before turning
+			is_skidding = true
+			velocity.x = move_toward(velocity.x, 0, SKID_FRICTION * delta)
+		else:
+			# Normal acceleration toward target speed
+			is_skidding = false
+			var target_velocity = direction * max_speed
+			velocity.x = move_toward(velocity.x, target_velocity, acceleration * delta)
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+		# No input - apply friction
+		is_skidding = false
+		var friction = GROUND_FRICTION if is_on_floor() else GROUND_FRICTION * 0.5  # Less friction in air
+		velocity.x = move_toward(velocity.x, 0, friction * delta)
 
 	move_and_slide()
 
 	# Animation logic - detect turn based on persistent direction tracking
-	var is_turning = (last_move_direction == -1 and direction > 0) or (last_move_direction == 1 and direction < 0)
+	var is_turning = is_skidding or ((last_move_direction == -1 and direction > 0) or (last_move_direction == 1 and direction < 0))
 
 	# Debug output
 	if direction != 0 or velocity.x != 0 or turn_timer > 0:
-		print("vel.x=", velocity.x, " dir=", direction, " last_dir=", last_move_direction, " is_turning=", is_turning, " timer=", turn_timer)
+		print("vel.x=", velocity.x, " dir=", direction, " running=", is_running, " skidding=", is_skidding, " last_dir=", last_move_direction, " is_turning=", is_turning, " timer=", turn_timer)
 
 	if is_turning:
 		turn_timer = TURN_FRAMES

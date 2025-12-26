@@ -1,12 +1,12 @@
-[gd_scene load_steps=8 format=4 uid="uid://b4xr3dx8pvwxc"]
+[gd_scene load_steps=9 format=4 uid="uid://b4xr3dx8pvwxc"]
 
 [ext_resource type="PackedScene" uid="uid://ckr8qw4nf4qoj" path="res://scenes/player.tscn" id="1_main"]
 [ext_resource type="Script" uid="uid://bd2ghnkr5dt45" path="res://scripts/camera.gd" id="3_camera"]
 [ext_resource type="AudioStream" uid="uid://ct8oxeq6fd8kx" path="res://assets/audio/Gameplay_Theme_2.mp3" id="4_jyhfs"]
 [ext_resource type="Script" uid="uid://c6on686107yhp" path="res://scripts/question_boxes.gd" id="4_question_boxes"]
 [ext_resource type="TileSet" uid="uid://dds1jt6hytcor" path="res://assets/tileset.tres" id="4_tileset"]
+[ext_resource type="AudioStream" uid="uid://dnko7yk7lp886" path="res://assets/audio/brick.wav" id="5_brick"]
 [ext_resource type="AudioStream" uid="uid://waggvih8wcs7" path="res://assets/audio/bump.wav" id="5_bump"]
-[ext_resource type="AudioStream" path="res://assets/audio/brick.wav" id="5_brick"]
 [ext_resource type="PackedScene" uid="uid://flagpole123" path="res://scenes/flagpole.tscn" id="6_flagpole"]
 
 [node name="Main" type="Node2D"]

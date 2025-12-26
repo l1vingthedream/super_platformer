@@ -14,11 +14,10 @@
 - [x] Mushroom + Flower + Star + 1up + Coins
 - [x] Mushroom Power-Up States + Animation in response to powerup collision
 - [x] **Flagpole level completion** - Player collides with flag, slides down flagpole with sliding animation (different for big/small), flagpole sound plays, music stops, scene reloads
+- [x] **Brick breaking for powered-up states** - Big/Fire/Invincible Mario breaks bricks into 4 fragments with physics-based parabolic motion, brick.wav sound, Small Mario bounces bricks
+- [x] **Momentum-based walk/run system** - X button for running (like NES B button), gradual acceleration/deceleration, skidding when turning at high speed, reduced air control, momentum preservation for jumps
 
 ## Pending Features
-
-- [ ] Support brick tiles breaking apart when Player is big, fire, or invincible
-- [ ] Support for player moving at a regular speed, and then speeding up when pressing a "speedup" button, like the B button on NES
 - [ ] Create enemy sprites and their animation
 - [ ] Support Player dying when colliding with enemy from enemy's left, bottom, and right sides
 - [ ] Support Player killing enemy sprite when player jumps on top of enemy sprite. When player hops on enemy, player should bounce off slightly

@@ -412,6 +412,9 @@ func spawn_item(tile_coords: Vector2i, item_type: String):
 
 	item.global_position = spawn_position
 
+	# Set z-index to render behind question boxes during pop-up
+	item.z_index = -1
+
 	# Add to Main scene (not TileMapLayer)
 	get_parent().add_child(item)
 

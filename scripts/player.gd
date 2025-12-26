@@ -17,6 +17,9 @@ var last_move_direction = 0  # -1 for left, 1 for right, 0 for none
 # Death system
 var is_dead = false
 
+# Flagpole sliding system
+var is_sliding = false
+
 # Jump system
 var jump_hold_time = 0.0
 var is_jumping = false
@@ -34,6 +37,9 @@ func _ready():
 	add_to_group("player")
 
 	print("DEBUG: Player initialized in power state: ", current_power_state)
+
+	# Ensure collision box is correct size for current state
+	resize_collision_box(current_power_state)
 
 func power_up(new_state: PowerUpState):
 	# Ignore if already at or above this state
@@ -98,6 +104,11 @@ func _physics_process(delta):
 		velocity.x = move_toward(velocity.x, 0, SPEED * 0.5)
 		move_and_slide()
 		return  # Skip normal control logic
+
+	# Control locking during flagpole slide
+	if is_sliding:
+		# No player control during slide - flagpole tween controls position
+		return
 
 	# Track jump hold time
 	if is_jumping and Input.is_action_pressed("jump"):
@@ -166,6 +177,13 @@ func die():
 
 	# Stop player velocity
 	velocity = Vector2.ZERO
+
+	# Stop background music
+	var music_player = get_tree().get_first_node_in_group("music")
+	if not music_player:
+		music_player = get_parent().get_node_or_null("AudioStreamPlayer")
+	if music_player:
+		music_player.stop()
 
 	# Play death sound
 	death_sound.play()

@@ -91,6 +91,22 @@ region = Rect2(96, 32, 16, 32)
 atlas = ExtResource("2_sprite")
 region = Rect2(76, 32, 16, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_slide1"]
+atlas = ExtResource("2_sprite")
+region = Rect2(136, 8, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slide2"]
+atlas = ExtResource("2_sprite")
+region = Rect2(154, 8, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_big_slide1"]
+atlas = ExtResource("2_sprite")
+region = Rect2(136, 31, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_big_slide2"]
+atlas = ExtResource("2_sprite")
+region = Rect2(154, 31, 16, 32)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_1"]
 animations = [{
 "frames": [{
@@ -200,6 +216,28 @@ animations = [{
 "loop": false,
 "name": &"big_turn",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slide1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slide2")
+}],
+"loop": true,
+"name": &"slide",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_big_slide1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_big_slide2")
+}],
+"loop": true,
+"name": &"big_slide",
+"speed": 8.0
 }]
 
 [node name="Player" type="CharacterBody2D"]

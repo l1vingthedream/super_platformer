@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://flagpole123"]
+
+[ext_resource type="Script" path="res://scripts/flagpole.gd" id="1_flagpole"]
+[ext_resource type="Texture2D" uid="uid://vfkoiuvy6lvj" path="res://assets/sprites/Items_Objects_NPCs.png" id="2_sprite"]
+[ext_resource type="AudioStream" uid="uid://c6udh5625rio3" path="res://assets/audio/flagpole.wav" id="3_sound"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(16, 184)
+
+[node name="Flagpole" type="Node2D"]
+script = ExtResource("1_flagpole")
+
+[node name="FlagSprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_sprite")
+centered = true
+region_enabled = true
+region_rect = Rect2(0, 34, 16, 16)
+position = Vector2(-12, -176)
+
+[node name="PoleSprite" type="Sprite2D" parent="."]
+modulate = Color(0.6, 0.4, 0.2, 1)
+texture = ExtResource("2_sprite")
+centered = true
+region_enabled = true
+region_rect = Rect2(0, 0, 2, 16)
+position = Vector2(0, -92)
+scale = Vector2(1, 11.5)
+
+[node name="PlayerDetector" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
+shape = SubResource("RectangleShape2D_1")
+position = Vector2(0, -92)
+
+[node name="FlagpoleSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_sound")
+
+[connection signal="body_entered" from="PlayerDetector" to="." method="_on_player_detected"]

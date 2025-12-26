@@ -19,6 +19,7 @@ var hit_boxes: Dictionary = {}  # tile_coords -> bool
 @onready var player: CharacterBody2D = get_parent().get_node("Player")
 @onready var other_layer: TileMapLayer = get_parent().get_node("TileMapLayer2") if get_parent().has_node("TileMapLayer2") else null
 @onready var bump_sound = $BumpSound
+@onready var brick_break_sound = $BrickBreakSound
 
 func _ready():
 	print("QuestionBoxes system initialized")
@@ -198,8 +199,17 @@ func bounce_box(tile_coords: Vector2i):
 	)
 
 func bounce_brick(tile_coords: Vector2i):
+	# Check player's power state
+	if player.current_power_state >= player.PowerUpState.BIG:
+		# Big, Fire, or Invincible - BREAK the brick
+		print("DEBUG: Player is powered up - breaking brick!")
+		break_brick(tile_coords)
+		return
+
+	# Small player - just bounce the brick
+	print("DEBUG: Player is small - bouncing brick")
+
 	# Immediately ERASE the brick tile (make invisible) so only the bounce sprite shows
-	print("DEBUG: Erasing brick tile during bounce")
 	erase_cell(tile_coords)
 
 	# Also erase on the other layer if it exists
@@ -271,6 +281,118 @@ func bounce_brick(tile_coords: Vector2i):
 		# Clean up the bounce sprite
 		sprite.queue_free()
 	)
+
+func break_brick(tile_coords: Vector2i):
+	# Permanently ERASE the brick tile
+	print("DEBUG: Breaking brick tile permanently")
+	erase_cell(tile_coords)
+
+	# Also erase on the other layer if it exists
+	if other_layer:
+		var other_atlas = other_layer.get_cell_atlas_coords(tile_coords)
+		if other_atlas == BRICK_ATLAS:
+			other_layer.erase_cell(tile_coords)
+			print("DEBUG: Erased brick on TileMapLayer2")
+
+	# Play brick break sound
+	brick_break_sound.play()
+
+	# Load the Items_Objects_NPCs.png texture for brick fragments
+	var texture = load("res://assets/sprites/Items_Objects_NPCs.png")
+
+	# Get brick center position
+	var tile_local_pos = map_to_local(tile_coords)
+
+	# Brick fragment atlas coordinates (animate through 4 frames)
+	# These are from Items_Objects_NPCs.png, not the tileset
+	var fragment_frames = [Vector2i(9, 2), Vector2i(10, 2), Vector2i(11, 2), Vector2i(12, 2)]
+
+	# Fragment physics parameters (matching Mario physics)
+	const GRAVITY = 980.0  # pixels/second^2 (match game gravity)
+	const HORIZONTAL_SPEED = 100.0  # pixels/second outward
+
+	# Initial vertical velocities (negative = upward)
+	const TOP_PAIR_VELOCITY = -400.0  # Higher boost for top pair
+	const BOTTOM_PAIR_VELOCITY = -200.0  # Lower boost for bottom pair
+
+	# Create 4 fragments with symmetrical initial velocities
+	var fragment_configs = [
+		{"offset": Vector2(-8, -8), "velocity": Vector2(-HORIZONTAL_SPEED, TOP_PAIR_VELOCITY)},  # Top-left
+		{"offset": Vector2(8, -8), "velocity": Vector2(HORIZONTAL_SPEED, TOP_PAIR_VELOCITY)},   # Top-right
+		{"offset": Vector2(-8, 8), "velocity": Vector2(-HORIZONTAL_SPEED, BOTTOM_PAIR_VELOCITY)},  # Bottom-left
+		{"offset": Vector2(8, 8), "velocity": Vector2(HORIZONTAL_SPEED, BOTTOM_PAIR_VELOCITY)}   # Bottom-right
+	]
+
+	for config in fragment_configs:
+		var sprite = Sprite2D.new()
+		sprite.texture = texture
+		sprite.region_enabled = true
+		sprite.z_index = 100  # Render in front of everything
+
+		# Start with first frame (9,2)
+		var first_frame = fragment_frames[0]
+		var tile_pixel_x = first_frame.x * 17
+		var tile_pixel_y = first_frame.y * 17
+		sprite.region_rect = Rect2(tile_pixel_x, tile_pixel_y, 16, 16)
+
+		# Position at offset from brick center
+		sprite.position = tile_local_pos + config["offset"]
+
+		# Store velocity and animation data in the sprite's metadata
+		sprite.set_meta("velocity", config["velocity"])
+		sprite.set_meta("frames", fragment_frames)
+		sprite.set_meta("frame_index", 0)
+		sprite.set_meta("frame_timer", 0.0)
+		sprite.set_meta("gravity", GRAVITY)
+
+		# Add to scene
+		add_child(sprite)
+
+# Called every frame to update brick fragment physics
+func _process(delta):
+	# Update all brick fragments (children with velocity metadata)
+	for child in get_children():
+		if child is Sprite2D and child.has_meta("velocity"):
+			update_fragment_physics(child, delta)
+
+func update_fragment_physics(sprite: Sprite2D, delta: float):
+	# Get velocity and gravity from metadata
+	var velocity: Vector2 = sprite.get_meta("velocity")
+	var gravity: float = sprite.get_meta("gravity")
+
+	# Apply gravity to vertical velocity
+	velocity.y += gravity * delta
+
+	# Update position based on velocity
+	sprite.position += velocity * delta
+
+	# Store updated velocity
+	sprite.set_meta("velocity", velocity)
+
+	# Update animation frame
+	var frame_timer: float = sprite.get_meta("frame_timer")
+	var frame_index: int = sprite.get_meta("frame_index")
+	var frames: Array = sprite.get_meta("frames")
+
+	const FRAME_DURATION = 0.1  # seconds per frame
+	frame_timer += delta
+
+	if frame_timer >= FRAME_DURATION:
+		frame_timer = 0.0
+		frame_index = (frame_index + 1) % frames.size()
+		sprite.set_meta("frame_index", frame_index)
+
+		# Update sprite region to next frame
+		var frame = frames[frame_index]
+		var tile_pixel_x = frame.x * 17
+		var tile_pixel_y = frame.y * 17
+		sprite.region_rect = Rect2(tile_pixel_x, tile_pixel_y, 16, 16)
+
+	sprite.set_meta("frame_timer", frame_timer)
+
+	# Remove sprite if it falls off screen (y > some threshold)
+	if sprite.position.y > 200:  # Adjust based on your camera/viewport
+		sprite.queue_free()
 
 func spawn_item(tile_coords: Vector2i, item_type: String):
 	# Create item instance

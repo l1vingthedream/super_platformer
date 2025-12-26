@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://c6on686107yhp" path="res://scripts/question_boxes.gd" id="4_question_boxes"]
 [ext_resource type="TileSet" uid="uid://dds1jt6hytcor" path="res://assets/tileset.tres" id="4_tileset"]
 [ext_resource type="AudioStream" uid="uid://waggvih8wcs7" path="res://assets/audio/bump.wav" id="5_bump"]
+[ext_resource type="AudioStream" path="res://assets/audio/brick.wav" id="5_brick"]
 [ext_resource type="PackedScene" uid="uid://flagpole123" path="res://scenes/flagpole.tscn" id="6_flagpole"]
 
 [node name="Main" type="Node2D"]
@@ -33,6 +34,9 @@ script = ExtResource("4_question_boxes")
 
 [node name="BumpSound" type="AudioStreamPlayer" parent="TileMapLayer"]
 stream = ExtResource("5_bump")
+
+[node name="BrickBreakSound" type="AudioStreamPlayer" parent="TileMapLayer"]
+stream = ExtResource("5_brick")
 
 [node name="TileMapLayer2" type="TileMapLayer" parent="."]
 position = Vector2(-2, 0)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://ckr8qw4nf4qoj"]
+[gd_scene load_steps=36 format=3 uid="uid://ckr8qw4nf4qoj"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
 [ext_resource type="Texture2D" uid="uid://c2r3wkp8dfwdg" path="res://assets/sprites/Playable_Characters_1P_2P.png" id="2_sprite"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/jumpsmall.wav" id="5_jumpsmall"]
 [ext_resource type="AudioStream" path="res://assets/audio/powerup.wav" id="6_powerup"]
 [ext_resource type="AudioStream" path="res://assets/audio/big_jump.wav" id="7_bigjump"]
+[ext_resource type="AudioStream" path="res://assets/audio/pipepowerdown.wav" id="8_shrink"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(14, 16)
@@ -66,6 +67,26 @@ region = Rect2(36, 72, 16, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_grow8"]
 atlas = ExtResource("2_sprite")
 region = Rect2(56, 72, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shrink1"]
+atlas = ExtResource("2_sprite")
+region = Rect2(56, 72, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shrink2"]
+atlas = ExtResource("2_sprite")
+region = Rect2(74, 72, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shrink3"]
+atlas = ExtResource("2_sprite")
+region = Rect2(92, 72, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shrink4"]
+atlas = ExtResource("2_sprite")
+region = Rect2(110, 72, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_death"]
+atlas = ExtResource("2_sprite")
+region = Rect2(116, 8, 16, 16)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_big_idle"]
 atlas = ExtResource("2_sprite")
@@ -238,6 +259,31 @@ animations = [{
 "loop": true,
 "name": &"big_slide",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_shrink1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_shrink2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_shrink3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_shrink4")
+}],
+"loop": false,
+"name": &"shrink",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_death")
+}],
+"loop": false,
+"name": &"death",
+"speed": 5.0
 }]
 
 [node name="Player" type="CharacterBody2D"]
@@ -266,3 +312,6 @@ stream = ExtResource("6_powerup")
 
 [node name="BigJumpSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_bigjump")
+
+[node name="ShrinkSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_shrink")

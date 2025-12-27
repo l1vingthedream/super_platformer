@@ -50,3 +50,48 @@ autoplay = true
 
 [node name="Goomba" parent="." instance=ExtResource("9_85g3d")]
 position = Vector2(360, -40)
+
+[node name="Goomba2" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(664, -40)
+
+[node name="Goomba3" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(816, -40)
+
+[node name="Goomba4" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(840, -40)
+
+[node name="Goomba5" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(1288, -168)
+
+[node name="Goomba6" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(1312, -168)
+
+[node name="Goomba7" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(1560, -40)
+
+[node name="Goomba8" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(1592, -40)
+
+[node name="Goomba9" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(1832, -40)
+
+[node name="Goomba10" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(1864, -40)
+
+[node name="Goomba11" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(1992, -40)
+
+[node name="Goomba12" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(2024, -40)
+
+[node name="Goomba13" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(2064, -40)
+
+[node name="Goomba14" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(2096, -40)
+
+[node name="Goomba15" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(2752, -40)
+
+[node name="Goomba16" parent="." instance=ExtResource("9_85g3d")]
+position = Vector2(2792, -40)

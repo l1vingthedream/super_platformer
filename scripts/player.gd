@@ -4,6 +4,7 @@ extends CharacterBody2D
 enum PowerUpState { SMALL, BIG, FIRE, INVINCIBLE }
 var current_power_state: PowerUpState = PowerUpState.SMALL
 var is_growing = false
+var is_shrinking = false
 
 # Movement constants - Momentum-based system
 # Classic SMB values: Walk = 1.5px/frame, Run = 2.5px/frame @ 60fps
@@ -46,10 +47,14 @@ var is_jumping = false
 @onready var jump_small_sound = $JumpSmallSound
 @onready var powerup_sound = $PowerUpSound
 @onready var big_jump_sound = $BigJumpSound
+@onready var shrink_sound = $ShrinkSound
 
 func _ready():
 	# Make player discoverable by items
 	add_to_group("player")
+
+	# Set z_index so player renders in front of enemies during collisions
+	z_index = 1
 
 	print("DEBUG: Player initialized in power state: ", current_power_state)
 
@@ -84,6 +89,34 @@ func play_growth_animation():
 	print("DEBUG: Growth animation finished")
 	is_growing = false
 	resize_collision_box(PowerUpState.BIG)
+
+func play_shrink_animation():
+	is_shrinking = true
+	print("DEBUG: Starting shrink animation")
+
+	# Play shrink sound
+	shrink_sound.play()
+
+	# Store original Y position before animation
+	var original_y = global_position.y
+
+	# Play shrink animation
+	animated_sprite.play("shrink")
+	await animated_sprite.animation_finished
+
+	print("DEBUG: Shrink animation finished")
+
+	# Adjust Y position to keep feet on ground
+	# Big hitbox is 16x32 centered (bottom at Y+16)
+	# Small hitbox is 16x16 centered (bottom at Y+8)
+	# Need to move down by 8 pixels
+	global_position.y = original_y + 8.0
+
+	# Resize collision box to small
+	resize_collision_box(PowerUpState.SMALL)
+
+	is_shrinking = false
+	print("DEBUG: Player shrunk to small size")
 
 func resize_collision_box(state: PowerUpState):
 	match state:
@@ -120,9 +153,21 @@ func _physics_process(delta):
 		move_and_slide()
 		return  # Skip normal control logic
 
+	# Control locking during shrink animation
+	if is_shrinking:
+		# Maintain momentum but no new input
+		velocity.x = move_toward(velocity.x, 0, GROUND_FRICTION * 0.5 * delta)
+		move_and_slide()
+		return  # Skip normal control logic
+
 	# Control locking during flagpole slide
 	if is_sliding:
 		# No player control during slide - flagpole tween controls position
+		return
+
+	# Control locking during death sequence
+	if is_dead:
+		# No control during death - death animation handles everything
 		return
 
 	# Track jump hold time
@@ -213,9 +258,27 @@ func _physics_process(delta):
 
 func die():
 	is_dead = true
+	print("DEBUG: Player death sequence started")
 
-	# Stop player velocity
-	velocity = Vector2.ZERO
+	# Hit stop - freeze game for 0.5 seconds
+	# Allow player to continue processing for death animation
+	var original_mode = process_mode
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	get_tree().paused = true
+	await get_tree().create_timer(0.5, true, false, true).timeout  # Process always timer
+	get_tree().paused = false
+	process_mode = original_mode
+
+	# Change to death sprite
+	animated_sprite.play("death")
+
+	# Stop horizontal movement, apply upward pop
+	velocity.x = 0
+	velocity.y = -300.0  # Small upward hop
+
+	# Disable collision (fall through floors)
+	collision_layer = 0
+	collision_mask = 0
 
 	# Stop background music
 	var music_player = get_tree().get_first_node_in_group("music")
@@ -224,11 +287,18 @@ func die():
 	if music_player:
 		music_player.stop()
 
-	# Play death sound
+	# Play death sound and wait for it to finish (2.7 seconds)
 	death_sound.play()
 
-	# Wait for sound to finish, then reload
-	await death_sound.finished
+	# Apply gravity and fall while death sound plays
+	while death_sound.playing:
+		velocity.y += gravity * get_physics_process_delta_time()
+		global_position.y += velocity.y * get_physics_process_delta_time()
+		await get_tree().process_frame
+
+	print("DEBUG: Death sound finished, reloading scene")
+
+	# Reload scene
 	get_tree().reload_current_scene()
 
 func bounce_off_enemy():
@@ -238,17 +308,29 @@ func bounce_off_enemy():
 
 func take_damage():
 	"""Handle player taking damage from enemy"""
-	# Ignore damage if already invulnerable or dead
-	if is_invulnerable or is_dead:
+	# Ignore damage if already invulnerable, dead, or shrinking
+	if is_invulnerable or is_dead or is_shrinking:
 		return
 
 	print("DEBUG: Player taking damage! Current state: ", current_power_state)
 
-	# If powered up (BIG, FIRE, or INVINCIBLE), revert to SMALL
+	# If powered up (BIG, FIRE, or INVINCIBLE), shrink to SMALL
 	if current_power_state > PowerUpState.SMALL:
-		# Power down to small
+		# Freeze game for ~1 second during shrink animation
+		# Use process_mode to allow player animation to continue
+		var original_mode = process_mode
+		process_mode = Node.PROCESS_MODE_ALWAYS
+		get_tree().paused = true
+
+		# Change power state
 		set_power_state(PowerUpState.SMALL)
-		resize_collision_box(PowerUpState.SMALL)
+
+		# Play shrink animation (this will resize hitbox when done)
+		await play_shrink_animation()
+
+		# Unfreeze game
+		get_tree().paused = false
+		process_mode = original_mode
 
 		# Grant invulnerability frames
 		is_invulnerable = true

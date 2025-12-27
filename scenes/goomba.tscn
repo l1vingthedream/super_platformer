@@ -1,0 +1,71 @@
+[gd_scene load_steps=9 format=3 uid="uid://bytpmgasg5wji"]
+
+[ext_resource type="Script" path="res://scripts/goomba.gd" id="1_goomba"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Enemies.png" id="2_sprite"]
+[ext_resource type="AudioStream" path="res://assets/audio/stompswim.wav" id="3_stomp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
+size = Vector2(16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk1"]
+atlas = ExtResource("2_sprite")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_walk2"]
+atlas = ExtResource("2_sprite")
+region = Rect2(18, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_squished"]
+atlas = ExtResource("2_sprite")
+region = Rect2(36, 24, 16, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_goomba"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_walk2")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_squished")
+}],
+"loop": false,
+"name": &"squished",
+"speed": 5.0
+}]
+
+[node name="Goomba" type="CharacterBody2D"]
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_goomba")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_goomba")
+animation = &"walk"
+autoplay = "walk"
+centered = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_1")
+
+[node name="PlayerDetector" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
+shape = SubResource("RectangleShape2D_2")
+
+[node name="StompSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_stomp")
+
+[connection signal="body_entered" from="PlayerDetector" to="." method="_on_player_detected"]

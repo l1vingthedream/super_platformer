@@ -30,6 +30,11 @@ var is_dead = false
 # Flagpole sliding system
 var is_sliding = false
 
+# Damage system
+var is_invulnerable = false
+const INVULNERABILITY_DURATION = 2.0  # Seconds of invincibility after taking damage
+const ENEMY_BOUNCE_VELOCITY = -250.0  # Upward bounce when stomping enemy
+
 # Jump system
 var jump_hold_time = 0.0
 var is_jumping = false
@@ -225,3 +230,49 @@ func die():
 	# Wait for sound to finish, then reload
 	await death_sound.finished
 	get_tree().reload_current_scene()
+
+func bounce_off_enemy():
+	"""Apply upward bounce when player stomps on enemy"""
+	velocity.y = ENEMY_BOUNCE_VELOCITY
+	print("DEBUG: Player bounced off enemy")
+
+func take_damage():
+	"""Handle player taking damage from enemy"""
+	# Ignore damage if already invulnerable or dead
+	if is_invulnerable or is_dead:
+		return
+
+	print("DEBUG: Player taking damage! Current state: ", current_power_state)
+
+	# If powered up (BIG, FIRE, or INVINCIBLE), revert to SMALL
+	if current_power_state > PowerUpState.SMALL:
+		# Power down to small
+		set_power_state(PowerUpState.SMALL)
+		resize_collision_box(PowerUpState.SMALL)
+
+		# Grant invulnerability frames
+		is_invulnerable = true
+		start_invulnerability_animation()
+
+		# End invulnerability after duration
+		await get_tree().create_timer(INVULNERABILITY_DURATION).timeout
+		is_invulnerable = false
+		animated_sprite.modulate = Color(1, 1, 1, 1)  # Reset to full opacity
+		print("DEBUG: Invulnerability ended")
+	else:
+		# Small Mario dies
+		die()
+
+func start_invulnerability_animation():
+	"""Flashing effect during invulnerability"""
+	var flash_count = 0
+	var max_flashes = int(INVULNERABILITY_DURATION * 8)  # Flash 8 times per second
+
+	while flash_count < max_flashes and is_invulnerable:
+		animated_sprite.modulate = Color(1, 1, 1, 0.3)  # Transparent
+		await get_tree().create_timer(0.0625).timeout
+		if not is_invulnerable:
+			break
+		animated_sprite.modulate = Color(1, 1, 1, 1)  # Opaque
+		await get_tree().create_timer(0.0625).timeout
+		flash_count += 1

@@ -130,14 +130,15 @@ func landing_sequence(player: CharacterBody2D):
 
 	await jump_tween.finished
 
-	# Step 3: Walk to castle doorway at x=3278
+	# Step 3: Walk to castle doorway at x=3294
+	player.get_node("AnimatedSprite2D").flip_h = false  # Face right toward castle
 	player.get_node("AnimatedSprite2D").play(player.get_animation_name("walk"))
 
 	var walk_tween = create_tween()
 	walk_tween.tween_property(
 		player,
 		"global_position:x",
-		3278.0,
+		3294.0,
 		0.8
 	)
 

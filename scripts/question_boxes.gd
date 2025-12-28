@@ -398,8 +398,19 @@ func spawn_item(tile_coords: Vector2i, item_type: String):
 	# Create item instance
 	var item = ITEM_SCENE.instantiate()
 
+	# Handle "powerup" type - spawn mushroom or flower based on player state
+	var actual_item_type = item_type
+	if item_type == "powerup":
+		# Check player's current power state
+		if player.current_power_state == player.PowerUpState.SMALL:
+			actual_item_type = "mushroom"
+		else:
+			# BIG, FIRE, or INVINCIBLE → spawn flower
+			actual_item_type = "flower"
+		print("DEBUG: Powerup box - player is ", player.current_power_state, " -> spawning ", actual_item_type)
+
 	# Configure item type
-	item.configure(item_type)
+	item.configure(actual_item_type)
 
 	# Position item at tile center
 	var tile_center = map_to_local(tile_coords)

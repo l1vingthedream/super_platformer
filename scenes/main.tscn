@@ -9,7 +9,7 @@
 [ext_resource type="AudioStream" uid="uid://waggvih8wcs7" path="res://assets/audio/bump.wav" id="5_bump"]
 [ext_resource type="PackedScene" uid="uid://flagpole123" path="res://scenes/flagpole.tscn" id="6_flagpole"]
 [ext_resource type="PackedScene" uid="uid://bytpmgasg5wji" path="res://scenes/goomba.tscn" id="9_85g3d"]
-[ext_resource type="PackedScene" path="res://scenes/koopa.tscn" id="10_choun"]
+[ext_resource type="PackedScene" uid="uid://c7koopa123456" path="res://scenes/koopa.tscn" id="10_choun"]
 
 [node name="Main" type="Node2D"]
 position = Vector2(2, 0)

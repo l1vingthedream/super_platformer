@@ -107,10 +107,12 @@ func handle_walking_physics(delta):
 	# Red Koopa ledge detection (only check when on ground)
 	if koopa_type == KoopaType.RED and ledge_detector.enabled and is_on_floor():
 		# Update raycast position based on direction
-		# Cast from ahead of the Koopa's edge (10 pixels ahead from center)
-		ledge_detector.position.x = 10 * movement_direction
-		ledge_detector.position.y = 12  # At bottom of Koopa (24px tall / 2)
-		ledge_detector.target_position = Vector2(0, 16)  # Cast down 16 pixels to detect floor
+		# Cast from ahead of the Koopa's edge
+		# Start from 12 pixels ahead horizontally, 8 pixels down vertically (above ground level)
+		ledge_detector.position.x = 12 * movement_direction
+		ledge_detector.position.y = 8
+		# Cast down 20 pixels to detect floor below
+		ledge_detector.target_position = Vector2(0, 20)
 
 		# Force raycast to update with new position
 		ledge_detector.force_raycast_update()
@@ -175,6 +177,7 @@ func enter_shell_stationary():
 	velocity = Vector2.ZERO
 
 	# Play stomp sound
+	stomp_sound.stream = load("res://assets/audio/stompswim.wav")
 	stomp_sound.play()
 
 	# Change to shell sprite
@@ -204,6 +207,7 @@ func enter_shell_moving(kick_direction: int, kicker_id: int = -1):
 	is_shaking = false
 
 	# Play kick sound
+	stomp_sound.stream = load("res://assets/audio/kickkill.wav")
 	stomp_sound.play()
 
 	# Set kick immunity

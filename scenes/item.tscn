@@ -35,6 +35,18 @@ region = Rect2(0, 0, 16, 16)
 atlas = ExtResource("2_sprite")
 region = Rect2(17, 0, 16, 16)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_flower2"]
+atlas = ExtResource("2_sprite")
+region = Rect2(34, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_flower3"]
+atlas = ExtResource("2_sprite")
+region = Rect2(51, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_flower4"]
+atlas = ExtResource("2_sprite")
+region = Rect2(68, 0, 16, 16)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_1up"]
 atlas = ExtResource("2_sprite")
 region = Rect2(0, 17, 16, 16)
@@ -77,10 +89,19 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_flower")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_flower2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_flower3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_flower4")
 }],
 "loop": true,
 "name": &"flower",
-"speed": 5.0
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,

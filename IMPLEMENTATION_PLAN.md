@@ -19,9 +19,9 @@
 - [x] **Enemy sprites and animations** - Goomba (basic walker with squish) and Koopa Troopa (three-state FSM with shell mechanics, Green falls off ledges, Red detects ledges)
 - [x] **Player-enemy collisions** - Player takes damage when colliding with enemy from left, bottom, or right sides; powered-up player shrinks to small with invulnerability, small player dies
 - [x] **Enemy stomping** - Player jumps on enemy to defeat them, player bounces off slightly after stomp
+- [x] **Fire flower powerup** - Powerup boxes with item_type="powerup" spawn mushroom for small Mario or animated fire flower for big Mario; flower uses 4-frame animation and stays stationary on top of box
 
 ## Pending Features
-- [ ] Support for powerup box containing animated fire-flower when player is already big
 - [ ] Support for Fireball Power-Up Animation
 - [ ] Support for Player Fireball when pressing the same "speedup" button, like B button on NES
 - [ ] Support for Player killing Enemies when fireball collides with enemy

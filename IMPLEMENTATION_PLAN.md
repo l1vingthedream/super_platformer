@@ -16,11 +16,11 @@
 - [x] **Flagpole level completion** - Player collides with flag, slides down flagpole with sliding animation (different for big/small), flagpole sound plays, music stops, scene reloads
 - [x] **Brick breaking for powered-up states** - Big/Fire/Invincible Mario breaks bricks into 4 fragments with physics-based parabolic motion, brick.wav sound, Small Mario bounces bricks
 - [x] **Momentum-based walk/run system** - X button for running (like NES B button), gradual acceleration/deceleration, skidding when turning at high speed, reduced air control, momentum preservation for jumps
+- [x] **Enemy sprites and animations** - Goomba (basic walker with squish) and Koopa Troopa (three-state FSM with shell mechanics, Green falls off ledges, Red detects ledges)
+- [x] **Player-enemy collisions** - Player takes damage when colliding with enemy from left, bottom, or right sides; powered-up player shrinks to small with invulnerability, small player dies
+- [x] **Enemy stomping** - Player jumps on enemy to defeat them, player bounces off slightly after stomp
 
 ## Pending Features
-- [ ] Create enemy sprites and their animation
-- [ ] Support Player dying when colliding with enemy from enemy's left, bottom, and right sides
-- [ ] Support Player killing enemy sprite when player jumps on top of enemy sprite. When player hops on enemy, player should bounce off slightly
 - [ ] Support for powerup box containing animated fire-flower when player is already big
 - [ ] Support for Fireball Power-Up Animation
 - [ ] Support for Player Fireball when pressing the same "speedup" button, like B button on NES

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/koopa.gd" id="1_koopa"]
 [ext_resource type="Texture2D" path="res://assets/sprites/Enemies.png" id="2_sprite"]
-[ext_resource type="AudioStream" path="res://assets/audio/stompswim.wav" id="3_stomp"]
+[ext_resource type="AudioStream" path="res://assets/audio/kickkill.wav" id="3_stomp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(16, 24)

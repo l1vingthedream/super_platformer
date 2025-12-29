@@ -149,6 +149,10 @@ region = Rect2(56, 140, 16, 32)
 atlas = ExtResource("2_sprite")
 region = Rect2(76, 140, 16, 32)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_fire_jump"]
+atlas = ExtResource("2_sprite")
+region = Rect2(96, 140, 16, 32)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_fire_throw"]
 atlas = ExtResource("2_sprite")
 region = Rect2(136, 180, 16, 32)
@@ -334,7 +338,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_fire_walk2")
+"texture": SubResource("AtlasTexture_fire_jump")
 }],
 "loop": false,
 "name": &"fire_jump",

@@ -25,16 +25,13 @@ const RUN_MAX_SPEED = 200.0        # Maximum running speed (2.5 * 60fps) - 66.7%
 const GROUND_ACCELERATION = 2400.0  # Acceleration on ground
 const AIR_ACCELERATION = 600.0     # Reduced acceleration in air
 const GROUND_FRICTION = 2500.0     # Deceleration when no input
-const SKID_FRICTION = 3000.0       # Stronger friction when skidding (turning)
+const SKID_FRICTION = 920.0        # Friction when skidding (10-16 frames to stop from full sprint)
 
 const JUMP_VELOCITY = -350.0
-const TURN_FRAMES = 5
 const JUMP_HOLD_THRESHOLD = 0.1  # Time in seconds to distinguish short vs long jump
-const SKID_THRESHOLD = 200.0     # Speed threshold for skid animation
+const SKID_THRESHOLD = 10.0      # Velocity threshold for skid animation (show skid until nearly stopped)
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-var turn_timer = 0
-var last_move_direction = 0  # -1 for left, 1 for right, 0 for none
 var is_skidding = false  # Track if player is skidding
 
 # Death system
@@ -311,32 +308,45 @@ func _physics_process(delta):
 
 	move_and_slide()
 
-	# Animation logic - detect turn based on persistent direction tracking
-	var is_turning = is_skidding or ((last_move_direction == -1 and direction > 0) or (last_move_direction == 1 and direction < 0))
+	# Animation logic - velocity-based skid detection
+	# Show skid sprite when:
+	# 1. On floor
+	# 2. Input direction is opposite to velocity direction
+	# 3. Input direction is not zero (actively pressing opposite direction)
+	# 4. Velocity magnitude is above threshold (moving fast enough)
+	var should_show_skid = (
+		is_on_floor() and
+		direction != 0 and
+		sign(direction) != sign(velocity.x) and
+		abs(velocity.x) > SKID_THRESHOLD
+	)
 
-	# Debug output
-	if direction != 0 or velocity.x != 0 or turn_timer > 0:
-		print("vel.x=", velocity.x, " dir=", direction, " running=", is_running, " skidding=", is_skidding, " last_dir=", last_move_direction, " is_turning=", is_turning, " timer=", turn_timer)
+	# Determine sprite facing direction
+	# During skid: face the direction of momentum (velocity)
+	# Otherwise: face the direction of input (or keep current if no input)
+	var sprite_should_flip_left = false
+	if should_show_skid:
+		# Face the direction of momentum during skid
+		sprite_should_flip_left = velocity.x < 0
+	elif direction != 0:
+		# Face the direction of input when not skidding
+		sprite_should_flip_left = direction < 0
+	else:
+		# No input - keep current facing
+		sprite_should_flip_left = animated_sprite.flip_h
 
-	if is_turning:
-		turn_timer = TURN_FRAMES
-
-	# Update last_move_direction only when actively moving (not during turn animation)
-	if turn_timer == 0 and direction != 0:
-		last_move_direction = direction
-
+	# Apply animations
 	if not is_on_floor():
 		animated_sprite.play(get_animation_name("jump"))
-		turn_timer = 0
-	elif turn_timer > 0:
+	elif should_show_skid:
 		animated_sprite.play(get_animation_name("turn"))
-		animated_sprite.flip_h = direction < 0
-		turn_timer -= 1
 	elif direction != 0:
 		animated_sprite.play(get_animation_name("walk"))
-		animated_sprite.flip_h = direction < 0
 	else:
 		animated_sprite.play(get_animation_name("idle"))
+
+	# Apply sprite flip
+	animated_sprite.flip_h = sprite_should_flip_left
 
 func die():
 	is_dead = true

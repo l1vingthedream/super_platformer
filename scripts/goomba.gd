@@ -26,6 +26,8 @@ func _ready():
 	# Add to enemies group for player detection
 	add_to_group("enemies")
 	print("DEBUG: Goomba initialized at position: ", global_position)
+	print("DEBUG: Goomba collision_layer = ", collision_layer)
+	print("DEBUG: Goomba is in 'enemies' group = ", is_in_group("enemies"))
 
 func _physics_process(delta):
 	# Check activation based on camera position

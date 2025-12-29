@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://bpf2y8n4vja0r"]
+
+[ext_resource type="Script" path="res://scripts/game_over_screen.gd" id="1_game_over"]
+[ext_resource type="Texture2D" path="res://assets/sprites/HUDs_Screens.png" id="2_huds"]
+[ext_resource type="AudioStream" path="res://assets/audio/gameover.wav" id="3_gameover_sound"]
+
+[node name="GameOverScreen" type="Node2D"]
+script = ExtResource("1_game_over")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 1)
+
+[node name="GameOverSprite" type="Sprite2D" parent="."]
+position = Vector2(640, 360)
+scale = Vector2(4, 4)
+texture = ExtResource("2_huds")
+region_enabled = true
+region_rect = Rect2(608, 570, 96, 16)
+
+[node name="GameOverSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_gameover_sound")

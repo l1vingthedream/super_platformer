@@ -17,6 +17,11 @@ func _ready():
 	# Start spinning animation
 	animated_sprite.play("spin")
 	print("DEBUG: Fireball created")
+	print("DEBUG: Fireball collision_layer = ", collision_layer)
+	print("DEBUG: Fireball collision_mask = ", collision_mask)
+	print("DEBUG: EnemyDetector collision_layer = ", enemy_detector.collision_layer)
+	print("DEBUG: EnemyDetector collision_mask = ", enemy_detector.collision_mask)
+	print("DEBUG: EnemyDetector monitoring = ", enemy_detector.monitoring)
 
 func initialize(spawn_pos: Vector2, spawn_direction: int):
 	"""Initialize fireball with position and direction"""

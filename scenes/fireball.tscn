@@ -46,7 +46,7 @@ radius = 4.0
 radius = 4.0
 
 [node name="Fireball" type="CharacterBody2D"]
-collision_layer = 16
+collision_layer = 32768
 collision_mask = 2
 script = ExtResource("1_3s14c")
 
@@ -59,8 +59,9 @@ frame_progress = 0.7062466
 shape = SubResource("CircleShape2D_qaphm")
 
 [node name="EnemyDetector" type="Area2D" parent="."]
+position = Vector2(-2, 0)
 collision_layer = 0
-collision_mask = 8
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyDetector"]
 shape = SubResource("CircleShape2D_mi4h5")

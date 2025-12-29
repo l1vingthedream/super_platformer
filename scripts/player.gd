@@ -388,10 +388,19 @@ func die():
 		global_position.y += velocity.y * get_physics_process_delta_time()
 		await get_tree().process_frame
 
-	print("DEBUG: Death sound finished, reloading scene")
+	print("DEBUG: Death sound finished")
 
-	# Reload scene
-	get_tree().reload_current_scene()
+	# Decrement life and check if player has lives remaining
+	var lives_remaining = GameManager.decrement_life()
+
+	if lives_remaining > 0:
+		# Still have lives - show life screen then reload level
+		print("DEBUG: Lives remaining, showing life screen")
+		get_tree().change_scene_to_file("res://scenes/life_screen.tscn")
+	else:
+		# No lives left - game over
+		print("DEBUG: No lives remaining, game over")
+		get_tree().change_scene_to_file("res://scenes/game_over_screen.tscn")
 
 func bounce_off_enemy():
 	"""Apply upward bounce when player stomps on enemy"""

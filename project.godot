@@ -12,9 +12,13 @@ config_version=5
 
 config/name="Super Platformer"
 config/description="A 2D platformer game"
-run/main_scene="res://scenes/main.tscn"
+run/main_scene="res://scenes/life_screen.tscn"
 config/features=PackedStringArray("4.5", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://scripts/game_manager.gd"
 
 [display]
 

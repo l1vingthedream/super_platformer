@@ -215,8 +215,12 @@ func collect():
 			else:
 				print("ERROR: Could not find player or power_up method!")
 		ItemType.FLOWER:
-			# TODO: Fire state (PowerUpState.FIRE = 2)
-			print("Collected flower!")
+			var player = get_tree().get_first_node_in_group("player")
+			if player and player.has_method("power_up"):
+				player.power_up(2)  # 2 = PowerUpState.FIRE
+				print("Collected flower - fire power granted!")
+			else:
+				print("ERROR: Could not find player or power_up method!")
 		ItemType.ONE_UP:
 			# TODO: Add extra life (when life system exists)
 			print("Collected 1-UP!")

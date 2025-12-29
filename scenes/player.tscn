@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://ckr8qw4nf4qoj"]
+[gd_scene load_steps=42 format=3 uid="uid://ckr8qw4nf4qoj"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
 [ext_resource type="Texture2D" uid="uid://c2r3wkp8dfwdg" path="res://assets/sprites/Playable_Characters_1P_2P.png" id="2_sprite"]
@@ -8,6 +8,7 @@
 [ext_resource type="AudioStream" path="res://assets/audio/powerup.wav" id="6_powerup"]
 [ext_resource type="AudioStream" path="res://assets/audio/big_jump.wav" id="7_bigjump"]
 [ext_resource type="AudioStream" path="res://assets/audio/pipepowerdown.wav" id="8_shrink"]
+[ext_resource type="AudioStream" path="res://assets/audio/fireball.wav" id="9_fireball"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(14, 16)
@@ -127,6 +128,30 @@ region = Rect2(136, 31, 16, 32)
 [sub_resource type="AtlasTexture" id="AtlasTexture_big_slide2"]
 atlas = ExtResource("2_sprite")
 region = Rect2(154, 31, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fire_idle"]
+atlas = ExtResource("2_sprite")
+region = Rect2(0, 140, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fire_walk1"]
+atlas = ExtResource("2_sprite")
+region = Rect2(20, 140, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fire_walk2"]
+atlas = ExtResource("2_sprite")
+region = Rect2(38, 140, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fire_walk3"]
+atlas = ExtResource("2_sprite")
+region = Rect2(56, 140, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fire_turn"]
+atlas = ExtResource("2_sprite")
+region = Rect2(76, 140, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fire_throw"]
+atlas = ExtResource("2_sprite")
+region = Rect2(136, 180, 16, 32)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1"]
 animations = [{
@@ -284,6 +309,52 @@ animations = [{
 "loop": false,
 "name": &"death",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fire_idle")
+}],
+"loop": true,
+"name": &"fire_idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fire_walk1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fire_walk2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fire_walk3")
+}],
+"loop": true,
+"name": &"fire_walk",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fire_walk2")
+}],
+"loop": false,
+"name": &"fire_jump",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fire_turn")
+}],
+"loop": false,
+"name": &"fire_turn",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fire_throw")
+}],
+"loop": false,
+"name": &"fire_throw",
+"speed": 5.0
 }]
 
 [node name="Player" type="CharacterBody2D"]
@@ -315,3 +386,6 @@ stream = ExtResource("7_bigjump")
 
 [node name="ShrinkSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_shrink")
+
+[node name="FireballSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_fireball")

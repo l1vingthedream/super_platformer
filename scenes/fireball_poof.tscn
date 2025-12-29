@@ -1,0 +1,42 @@
+[gd_scene load_steps=7 format=3 uid="uid://cswe62gind3bq"]
+
+[ext_resource type="Script" uid="uid://di2in4od3jlr2" path="res://scripts/fireball_poof.gd" id="1_pdu4x"]
+[ext_resource type="Texture2D" uid="uid://q02okqvptrfb" path="res://assets/sprites/Playable_Characters_1P_2P.png" id="2_858ox"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_66mp7"]
+atlas = ExtResource("2_858ox")
+region = Rect2(172, 196, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kneej"]
+atlas = ExtResource("2_858ox")
+region = Rect2(190, 196, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_shcc5"]
+atlas = ExtResource("2_858ox")
+region = Rect2(208, 196, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0qs0f"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_66mp7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kneej")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_shcc5")
+}],
+"loop": false,
+"name": &"explode",
+"speed": 12.0
+}]
+
+[node name="FireballPoof" type="Node2D"]
+script = ExtResource("1_pdu4x")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_0qs0f")
+animation = &"explode"
+frame = 2
+frame_progress = 1.0

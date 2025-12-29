@@ -1,0 +1,68 @@
+[gd_scene load_steps=10 format=3 uid="uid://cjdseadenw5cj"]
+
+[ext_resource type="Script" uid="uid://bapabs6q6a350" path="res://scripts/fireball.gd" id="1_3s14c"]
+[ext_resource type="Texture2D" uid="uid://q02okqvptrfb" path="res://assets/sprites/Playable_Characters_1P_2P.png" id="2_1gl40"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cb14k"]
+atlas = ExtResource("2_1gl40")
+region = Rect2(172, 185, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7kba2"]
+atlas = ExtResource("2_1gl40")
+region = Rect2(182, 185, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_43lgj"]
+atlas = ExtResource("2_1gl40")
+region = Rect2(192, 185, 8, 8)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vqoxj"]
+atlas = ExtResource("2_1gl40")
+region = Rect2(202, 185, 8, 8)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_86oub"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cb14k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7kba2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_43lgj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vqoxj")
+}],
+"loop": true,
+"name": &"spin",
+"speed": 20.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qaphm"]
+radius = 4.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mi4h5"]
+radius = 4.0
+
+[node name="Fireball" type="CharacterBody2D"]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("1_3s14c")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_86oub")
+animation = &"spin"
+frame_progress = 0.7062466
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_qaphm")
+
+[node name="EnemyDetector" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyDetector"]
+shape = SubResource("CircleShape2D_mi4h5")
+
+[connection signal="body_entered" from="EnemyDetector" to="." method="_on_enemy_detected"]

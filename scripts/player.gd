@@ -6,6 +6,18 @@ var current_power_state: PowerUpState = PowerUpState.SMALL
 var is_growing = false
 var is_shrinking = false
 
+# Fire transformation animation
+var is_transforming_to_fire = false
+const FIRE_TRANSFORM_DURATION = 1.0  # 60 frames at 60 FPS
+const PALETTE_SWAP_INTERVAL = 0.05   # Swap every 3 frames (2-4 frames range)
+
+# Fireball tracking
+var active_fireballs = []
+const MAX_FIREBALLS = 2
+var is_throwing = false
+var throw_animation_timer = 0.0
+const THROW_ANIMATION_DURATION = 0.167  # ~10 frames at 60 FPS
+
 # Movement constants - Momentum-based system
 # Classic SMB values: Walk = 1.5px/frame, Run = 2.5px/frame @ 60fps
 const WALK_MAX_SPEED = 120.0        # Maximum walking speed (1.5 * 60fps)
@@ -48,6 +60,7 @@ var is_jumping = false
 @onready var powerup_sound = $PowerUpSound
 @onready var big_jump_sound = $BigJumpSound
 @onready var shrink_sound = $ShrinkSound
+@onready var fireball_sound = $FireballSound
 
 func _ready():
 	# Make player discoverable by items
@@ -71,7 +84,15 @@ func power_up(new_state: PowerUpState):
 	powerup_sound.play()
 
 	# Trigger transition
-	set_power_state(new_state)
+	if new_state == PowerUpState.FIRE and current_power_state == PowerUpState.BIG:
+		# BIG → FIRE: palette swap transformation
+		play_fire_transformation()
+	elif new_state == PowerUpState.BIG and current_power_state == PowerUpState.SMALL:
+		# SMALL → BIG: existing growth animation
+		set_power_state(new_state)
+	else:
+		# Direct state change
+		set_power_state(new_state)
 
 func set_power_state(new_state: PowerUpState):
 	var old_state = current_power_state
@@ -89,6 +110,43 @@ func play_growth_animation():
 	print("DEBUG: Growth animation finished")
 	is_growing = false
 	resize_collision_box(PowerUpState.BIG)
+
+func play_fire_transformation():
+	"""Palette swap animation for BIG → FIRE transformation"""
+	is_transforming_to_fire = true
+
+	# Freeze game
+	get_tree().paused = true
+	process_mode = Node.PROCESS_MODE_ALWAYS
+
+	# Color palette sequences (modulate colors)
+	# Big Mario: #B53120 (red), #ea9e22 (orange), #6b6d00 (dark yellow)
+	var palette_1 = Color("#B53120")  # Standard (no change)
+	var palette_2 = Color("#0C9300")  # Green swap
+	var palette_3 = Color("#000000")  # Black swap
+	var palette_4 = Color("#ffffff")  # Fire Mario final (white/red)
+
+	var palettes = [palette_1, palette_2, palette_3, palette_4, palette_1, palette_2, palette_3, palette_4]
+	var swap_count = 0
+	var total_swaps = 20  # 20 swaps * 0.05s = 1 second
+
+	# Palette swap loop
+	while swap_count < total_swaps:
+		var palette_index = swap_count % palettes.size()
+		animated_sprite.modulate = palettes[palette_index]
+		await get_tree().create_timer(PALETTE_SWAP_INTERVAL).timeout
+		swap_count += 1
+
+	# Final form: switch to Fire Mario sprites
+	animated_sprite.modulate = Color(1, 1, 1, 1)  # Reset modulate
+	set_power_state(PowerUpState.FIRE)
+
+	# Unfreeze game
+	get_tree().paused = false
+	process_mode = Node.PROCESS_MODE_INHERIT
+	is_transforming_to_fire = false
+
+	print("DEBUG: Fire transformation complete")
 
 func play_shrink_animation():
 	is_shrinking = true
@@ -128,9 +186,18 @@ func resize_collision_box(state: PowerUpState):
 			print("DEBUG: Collision box resized to BIG (16x32)")
 
 func get_animation_name(base_name: String) -> String:
-	if current_power_state == PowerUpState.BIG:
-		return "big_" + base_name
-	return base_name
+	# Special case: throwing animation for Fire Mario
+	if is_throwing and current_power_state == PowerUpState.FIRE:
+		return "fire_throw"
+
+	# State-based animation prefixes
+	match current_power_state:
+		PowerUpState.FIRE:
+			return "fire_" + base_name
+		PowerUpState.BIG:
+			return "big_" + base_name
+		_:
+			return base_name
 
 func _physics_process(delta):
 	# Check for death (top of sprite below y=0)
@@ -196,6 +263,21 @@ func _physics_process(delta):
 	if is_on_floor():
 		is_jumping = false
 		jump_hold_time = 0.0
+
+	# Handle throw animation timer
+	if is_throwing:
+		throw_animation_timer -= delta
+		if throw_animation_timer <= 0:
+			is_throwing = false
+
+	# Fireball shooting (only when Fire state)
+	# Contextual: X button shoots when standing/jumping, runs when moving
+	if current_power_state == PowerUpState.FIRE and not is_transforming_to_fire:
+		if Input.is_action_just_pressed("run"):
+			# Only shoot if not running (velocity near zero) OR in the air
+			if abs(velocity.x) < 50.0 or not is_on_floor():
+				if active_fireballs.size() < MAX_FIREBALLS:
+					shoot_fireball()
 
 	# Get input
 	var direction = Input.get_axis("move_left", "move_right")
@@ -358,3 +440,39 @@ func start_invulnerability_animation():
 		animated_sprite.modulate = Color(1, 1, 1, 1)  # Opaque
 		await get_tree().create_timer(0.0625).timeout
 		flash_count += 1
+
+func shoot_fireball():
+	"""Spawn a fireball projectile"""
+	# Play throw animation
+	is_throwing = true
+	throw_animation_timer = THROW_ANIMATION_DURATION
+
+	# Play fireball sound
+	fireball_sound.play()
+
+	# Load fireball scene
+	var fireball_scene = preload("res://scenes/fireball.tscn")
+	var fireball = fireball_scene.instantiate()
+
+	# Calculate spawn position (at hand level, facing direction)
+	var spawn_offset_x = 12 if not animated_sprite.flip_h else -12
+	var spawn_offset_y = -10  # 6 pixels below top of 32px sprite = -16 + 6 = -10 from center
+	var spawn_position = global_position + Vector2(spawn_offset_x, spawn_offset_y)
+
+	# Set fireball direction
+	var direction = 1 if not animated_sprite.flip_h else -1
+	fireball.initialize(spawn_position, direction)
+
+	# Add to scene
+	get_parent().add_child(fireball)
+
+	# Track active fireball
+	active_fireballs.append(fireball)
+	fireball.tree_exited.connect(_on_fireball_removed.bind(fireball))
+
+	print("DEBUG: Fireball spawned! Active count: ", active_fireballs.size())
+
+func _on_fireball_removed(fireball):
+	"""Called when a fireball is removed from the scene"""
+	active_fireballs.erase(fireball)
+	print("DEBUG: Fireball removed. Active count: ", active_fireballs.size())

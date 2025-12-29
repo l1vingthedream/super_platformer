@@ -20,11 +20,9 @@
 - [x] **Player-enemy collisions** - Player takes damage when colliding with enemy from left, bottom, or right sides; powered-up player shrinks to small with invulnerability, small player dies
 - [x] **Enemy stomping** - Player jumps on enemy to defeat them, player bounces off slightly after stomp
 - [x] **Fire flower powerup** - Powerup boxes with item_type="powerup" spawn mushroom for small Mario or animated fire flower for big Mario; flower uses 4-frame animation and stays stationary on top of box
+- [x] **Fire Mario transformation and fireballs** - Big Mario collecting fire flower triggers 1-second palette swap transformation animation; Fire Mario shoots bouncing fireballs with X button (contextual: shoots when standing/jumping, runs when moving); fireballs defeat enemies on contact with poof explosion; 2-fireball limit; complete Fire Mario sprite set with throw animation
 
 ## Pending Features
-- [ ] Support for Fireball Power-Up Animation
-- [ ] Support for Player Fireball when pressing the same "speedup" button, like B button on NES
-- [ ] Support for Player killing Enemies when fireball collides with enemy
 - [ ] Support for Points System
 - [ ] Support for increasing Points when Player earns coins through coin-containing box, or collides with coin tiles, or enemy kills
 - [ ] Player lives system, starting with 3 lives, and increasing lives

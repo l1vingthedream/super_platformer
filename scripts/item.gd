@@ -204,6 +204,11 @@ func _on_player_detected(body):
 func collect():
 	is_collected = true
 
+	# Hide sprite and disable collision immediately
+	sprite.visible = false
+	collision_shape.disabled = true
+	player_detector.get_node("CollisionShape2D").disabled = true
+
 	# Apply item effect based on type
 	match item_type:
 		ItemType.MUSHROOM:
@@ -226,6 +231,8 @@ func collect():
 			one_up_sound.play()
 			GameManager.add_life()
 			print("Collected 1-UP!")
+			# Wait for sound to finish before freeing item
+			await one_up_sound.finished
 		ItemType.STAR:
 			# TODO: Grant invincibility (when power system exists)
 			print("Collected star!")

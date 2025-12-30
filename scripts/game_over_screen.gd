@@ -17,5 +17,5 @@ func _ready():
 	# Wait for display duration
 	await get_tree().create_timer(DISPLAY_DURATION).timeout
 
-	# Return to main scene (or title screen when implemented)
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	# Return to title screen
+	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")

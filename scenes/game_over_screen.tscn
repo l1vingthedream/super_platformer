@@ -12,12 +12,12 @@ offset_right = 1280.0
 offset_bottom = 720.0
 color = Color(0, 0, 0, 1)
 
-[node name="GameOverSprite" type="Sprite2D" parent="."]
+[node name="GameOverBackground" type="Sprite2D" parent="."]
 position = Vector2(640, 360)
-scale = Vector2(4, 4)
+scale = Vector2(3, 3)
 texture = ExtResource("2_huds")
 region_enabled = true
-region_rect = Rect2(608, 570, 96, 16)
+region_rect = Rect2(528, 460, 256, 240)
 
 [node name="GameOverSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_gameover_sound")

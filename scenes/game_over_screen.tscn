@@ -19,40 +19,5 @@ texture = ExtResource("2_huds")
 region_enabled = true
 region_rect = Rect2(528, 460, 256, 240)
 
-[node name="LetterR" type="Sprite2D" parent="."]
-position = Vector2(331, 51)
-scale = Vector2(3, 3)
-texture = ExtResource("2_huds")
-region_enabled = true
-region_rect = Rect2(243, 105, 8, 8)
-
-[node name="LetterO1" type="Sprite2D" parent="."]
-position = Vector2(358, 51)
-scale = Vector2(3, 3)
-texture = ExtResource("2_huds")
-region_enabled = true
-region_rect = Rect2(216, 105, 8, 8)
-
-[node name="LetterC1" type="Sprite2D" parent="."]
-position = Vector2(385, 51)
-scale = Vector2(3, 3)
-texture = ExtResource("2_huds")
-region_enabled = true
-region_rect = Rect2(108, 105, 8, 8)
-
-[node name="LetterC2" type="Sprite2D" parent="."]
-position = Vector2(412, 51)
-scale = Vector2(3, 3)
-texture = ExtResource("2_huds")
-region_enabled = true
-region_rect = Rect2(108, 105, 8, 8)
-
-[node name="LetterO2" type="Sprite2D" parent="."]
-position = Vector2(439, 51)
-scale = Vector2(3, 3)
-texture = ExtResource("2_huds")
-region_enabled = true
-region_rect = Rect2(216, 105, 8, 8)
-
 [node name="GameOverSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("3_gameover_sound")

@@ -62,6 +62,7 @@ var is_jumping = false
 @onready var big_jump_sound = $BigJumpSound
 @onready var shrink_sound = $ShrinkSound
 @onready var fireball_sound = $FireballSound
+@onready var one_up_sound = $OneUpSound
 
 func _ready():
 	# Make player discoverable by items
@@ -423,6 +424,7 @@ func bounce_off_enemy() -> int:
 	else:
 		# Beyond 8 stomps, grant 1UP each time
 		GameManager.add_life()
+		one_up_sound.play()  # Play 1UP sound for combo reward
 		points = -1  # Special value to indicate 1UP
 
 	# Increment combo counter

@@ -45,6 +45,10 @@ var is_invulnerable = false
 const INVULNERABILITY_DURATION = 2.0  # Seconds of invincibility after taking damage
 const ENEMY_BOUNCE_VELOCITY = -250.0  # Upward bounce when stomping enemy
 
+# Combo scoring system
+var enemy_stomp_count = 0  # Consecutive stomps without touching ground
+const STOMP_COMBO_POINTS = [100, 200, 400, 800, 1000, 2000, 4000, 8000]  # Points per combo level
+
 # Jump system
 var jump_hold_time = 0.0
 var is_jumping = false
@@ -79,6 +83,9 @@ func power_up(new_state: PowerUpState):
 
 	# Play sound
 	powerup_sound.play()
+
+	# Award points for collecting power-up
+	GameManager.add_score(1000)
 
 	# Trigger transition
 	if new_state == PowerUpState.FIRE and current_power_state == PowerUpState.BIG:
@@ -260,6 +267,8 @@ func _physics_process(delta):
 	if is_on_floor():
 		is_jumping = false
 		jump_hold_time = 0.0
+		# Reset combo counter when touching ground
+		enemy_stomp_count = 0
 
 	# Handle throw animation timer
 	if is_throwing:
@@ -402,10 +411,25 @@ func die():
 		print("DEBUG: No lives remaining, game over")
 		get_tree().change_scene_to_file("res://scenes/game_over_screen.tscn")
 
-func bounce_off_enemy():
-	"""Apply upward bounce when player stomps on enemy"""
+func bounce_off_enemy() -> int:
+	"""Apply upward bounce when player stomps on enemy and award combo points"""
 	velocity.y = ENEMY_BOUNCE_VELOCITY
-	print("DEBUG: Player bounced off enemy")
+
+	# Award points based on combo count
+	var points = 0
+	if enemy_stomp_count < STOMP_COMBO_POINTS.size():
+		points = STOMP_COMBO_POINTS[enemy_stomp_count]
+		GameManager.add_score(points)
+	else:
+		# Beyond 8 stomps, grant 1UP each time
+		GameManager.add_life()
+		points = -1  # Special value to indicate 1UP
+
+	# Increment combo counter
+	enemy_stomp_count += 1
+
+	print("DEBUG: Player bounced off enemy, combo: ", enemy_stomp_count, " points: ", points)
+	return points
 
 func take_damage():
 	"""Handle player taking damage from enemy"""

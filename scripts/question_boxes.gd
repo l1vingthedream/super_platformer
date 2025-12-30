@@ -294,6 +294,9 @@ func break_brick(tile_coords: Vector2i):
 			other_layer.erase_cell(tile_coords)
 			print("DEBUG: Erased brick on TileMapLayer2")
 
+	# Award points for breaking brick
+	GameManager.add_score(50)
+
 	# Play brick break sound
 	brick_break_sound.play()
 

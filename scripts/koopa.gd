@@ -291,13 +291,14 @@ func _on_player_detected(body):
 
 func on_stomped(player):
 	"""Handle player stomping on Koopa"""
+	var points = 0
 	match current_state:
 		State.WALKING:
 			# Enter shell
 			enter_shell_stationary()
-			# Apply bounce to player
+			# Apply bounce to player and get points
 			if player.has_method("bounce_off_enemy"):
-				player.bounce_off_enemy()
+				points = player.bounce_off_enemy()
 
 		State.SHELL_STATIONARY:
 			# Reset timer
@@ -305,16 +306,20 @@ func on_stomped(player):
 			is_shaking = false
 			play_shell_animation()
 			print("DEBUG: Shell timer reset by stomp")
-			# Apply bounce to player
+			# Apply bounce to player and get points
 			if player.has_method("bounce_off_enemy"):
-				player.bounce_off_enemy()
+				points = player.bounce_off_enemy()
 
 		State.SHELL_MOVING:
 			# Stop shell
 			enter_shell_stationary()
-			# Apply bounce to player
+			# Apply bounce to player and get points
 			if player.has_method("bounce_off_enemy"):
-				player.bounce_off_enemy()
+				points = player.bounce_off_enemy()
+
+	# Spawn floating score label
+	if points != 0:
+		GameManager.spawn_floating_score(points, global_position)
 
 func on_side_collision(player):
 	"""Handle player hitting Koopa from the side"""

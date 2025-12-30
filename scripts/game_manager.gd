@@ -126,3 +126,16 @@ func create_text_sprites(parent: Node, text: String, start_pos: Vector2, sprite_
 		sprite.scale = sprite_scale
 		sprite.position = start_pos + Vector2(i * letter_spacing, 0)
 		parent.add_child(sprite)
+
+func spawn_floating_score(points: int, world_position: Vector2):
+	"""Spawn a floating score label at the given world position"""
+	# Load the floating score scene
+	var floating_score_scene = load("res://scenes/floating_score.tscn")
+	var floating_score = floating_score_scene.instantiate()
+
+	# Set the position and score value
+	floating_score.global_position = world_position
+	floating_score.set_score(points)
+
+	# Add to the current scene (get the main scene tree root)
+	get_tree().current_scene.add_child(floating_score)

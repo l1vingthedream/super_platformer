@@ -38,6 +38,33 @@ func start_slide_sequence(player: CharacterBody2D):
 	var slide_distance = abs(slide_target_y - player_start_y)
 	var actual_duration = max(1.0, slide_distance / SLIDE_SPEED)
 
+	# Award height-based points (top of pole = 5000, bottom = 100)
+	# Flagpole height spans from approximately y=-200 (top) to y=-88 (bottom)
+	var flagpole_top_y = -200.0
+	var flagpole_bottom_y = slide_target_y  # -88.0
+	var height_ratio = clamp((flagpole_bottom_y - player_start_y) / (flagpole_bottom_y - flagpole_top_y), 0.0, 1.0)
+	var points = int(lerp(5000.0, 100.0, 1.0 - height_ratio))
+
+	# Round to nearest valid score value (100, 400, 500, 1000, 2000, 4000, 5000)
+	if points >= 4500:
+		points = 5000
+	elif points >= 3000:
+		points = 4000
+	elif points >= 1500:
+		points = 2000
+	elif points >= 750:
+		points = 1000
+	elif points >= 450:
+		points = 500
+	elif points >= 250:
+		points = 400
+	else:
+		points = 100
+
+	GameManager.add_score(points)
+	GameManager.spawn_floating_score(points, player.global_position)
+	print("DEBUG: Flagpole height bonus: ", points, " points")
+
 	print("DEBUG: Slide from y=", player_start_y, " to y=", slide_target_y)
 
 	# Lock player state

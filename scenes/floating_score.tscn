@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8floating_score"]
+
+[ext_resource type="Script" path="res://scripts/floating_score.gd" id="1_floating_score"]
+[ext_resource type="Texture2D" path="res://assets/sprites/Items_Objects_NPCs.png" id="2_items"]
+
+[node name="FloatingScore" type="Sprite2D"]
+texture = ExtResource("2_items")
+region_enabled = true
+region_rect = Rect2(220, 0, 16, 16)
+script = ExtResource("1_floating_score")

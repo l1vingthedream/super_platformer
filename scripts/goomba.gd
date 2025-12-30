@@ -118,9 +118,14 @@ func _on_player_detected(body):
 		print("DEBUG: Player stomped Goomba!")
 		squish()
 
-		# Apply bounce to player
+		# Apply bounce to player and get points awarded
+		var points = 0
 		if body.has_method("bounce_off_enemy"):
-			body.bounce_off_enemy()
+			points = body.bounce_off_enemy()
+
+		# Spawn floating score label
+		if points != 0:
+			GameManager.spawn_floating_score(points, global_position)
 	else:
 		print("DEBUG: Player hit Goomba from side - taking damage!")
 		# Player takes damage

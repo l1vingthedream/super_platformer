@@ -24,10 +24,11 @@
 - [x] **Player lives system** - GameManager singleton tracks 3 starting lives; life screen displays before gameplay and after each death showing remaining lives with player name; game over screen on 0 lives resets game state; 1UP mushroom increases lives with 1up.wav sound; velocity-based skid animation system
 - [x] **Title screen** - Title screen displays on game start with #9494FF background and title artwork; waits for jump button press before transitioning to life screen; game over returns to title screen; complete scene flow loop implemented
 - [x] **HUD (Heads-Up Display)** - NES-style CanvasLayer HUD with player name (ROCCO), 6-digit score, animated coin counter, world display (1-1), and time countdown (400); manual sprite positioning with 1px letter spacing; two-line layout with labels and values; GameManager signals for real-time updates
+- [x] **Points System** - Comprehensive scoring with combo multipliers: enemy stomps (100→200→400→800→1000→2000→4000→8000→1UP chain), power-ups (1000 pts), brick breaking (50 pts), height-based flagpole scoring (100-5000 pts); floating score labels spawn at action locations with upward tween and fade-out animation
+- [x] **Score rewards for player actions** - Points awarded for: coins from question boxes (200 pts), enemy defeats via stomp or fireball, power-up collection, brick breaking; combo system tracks consecutive enemy stomps without touching ground; all score events update HUD in real-time via GameManager signals
 
 ## Pending Features
-- [ ] Support for Points System
-- [ ] Support for increasing Points when Player earns coins through coin-containing box, or collides with coin tiles, or enemy kills
+- [ ] Support for coin tiles (collectible coins placed in level)
 - [ ] Support time left to complete level, with countdown displayed in HUD
 - [ ] Use of Pipes to move to a different level
 - [ ] Go to level 1-2

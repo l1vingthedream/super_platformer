@@ -21,11 +21,11 @@
 - [x] **Enemy stomping** - Player jumps on enemy to defeat them, player bounces off slightly after stomp
 - [x] **Fire flower powerup** - Powerup boxes with item_type="powerup" spawn mushroom for small Mario or animated fire flower for big Mario; flower uses 4-frame animation and stays stationary on top of box
 - [x] **Fire Mario transformation and fireballs** - Big Mario collecting fire flower triggers 1-second palette swap transformation animation; Fire Mario shoots bouncing fireballs with X button (contextual: shoots when standing/jumping, runs when moving); fireballs defeat enemies on contact with poof explosion; 2-fireball limit; complete Fire Mario sprite set with throw animation
+- [x] **Player lives system** - GameManager singleton tracks 3 starting lives; life screen displays before gameplay and after each death showing remaining lives with player name; game over screen on 0 lives resets game state; 1UP mushroom increases lives; velocity-based skid animation system
 
 ## Pending Features
 - [ ] Support for Points System
 - [ ] Support for increasing Points when Player earns coins through coin-containing box, or collides with coin tiles, or enemy kills
-- [ ] Player lives system, starting with 3 lives, and increasing lives
 - [ ] Support HUD that contains points, lives
 - [ ] Support time left to complete level, with countdown displayed in HUD
 - [ ] Title screen

@@ -222,7 +222,7 @@ func collect():
 			else:
 				print("ERROR: Could not find player or power_up method!")
 		ItemType.ONE_UP:
-			# TODO: Add extra life (when life system exists)
+			GameManager.add_life()
 			print("Collected 1-UP!")
 		ItemType.STAR:
 			# TODO: Grant invincibility (when power system exists)

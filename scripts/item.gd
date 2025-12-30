@@ -190,6 +190,9 @@ func handle_star_physics(delta):
 func play_coin_animation():
 	print("DEBUG: Coin animation complete, removing coin")
 
+	# Increment coin counter, award points, check 100-coin bonus
+	GameManager.collect_coin()
+
 	# Coin already faded during pop_up, just clean up
 	queue_free()
 
@@ -237,7 +240,8 @@ func collect():
 			# TODO: Grant invincibility (when power system exists)
 			print("Collected star!")
 		ItemType.COIN:
-			# Already handled in play_coin_animation
+			# Increment coin counter, award points, check 100-coin bonus
+			GameManager.collect_coin()
 			print("Collected coin!")
 		ItemType.BEANSTALK:
 			# TODO: Spawn beanstalk/reveal secret (future feature)

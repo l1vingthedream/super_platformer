@@ -19,7 +19,7 @@ region_enabled = true
 region_rect = Rect2(0, 460, 256, 240)
 
 [node name="LifeCountSprite" type="Sprite2D" parent="."]
-position = Vector2(691, 339)
+position = Vector2(691, 343)
 scale = Vector2(3, 3)
 texture = ExtResource("2_huds")
 region_enabled = true

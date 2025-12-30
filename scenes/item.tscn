@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/Items_Objects_NPCs.png" id="2_sprite"]
 [ext_resource type="AudioStream" path="res://assets/audio/item.wav" id="3_item"]
 [ext_resource type="AudioStream" path="res://assets/audio/coin.wav" id="4_coin"]
+[ext_resource type="AudioStream" path="res://assets/audio/1up.wav" id="5_1up"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(16, 16)
@@ -154,5 +155,8 @@ stream = ExtResource("3_item")
 
 [node name="CoinSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_coin")
+
+[node name="OneUpSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_1up")
 
 [connection signal="body_entered" from="PlayerDetector" to="." method="_on_player_detected"]

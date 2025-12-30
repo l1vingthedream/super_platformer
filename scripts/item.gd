@@ -37,6 +37,7 @@ const SPRITE_COORDS = {
 @onready var player_detector = $PlayerDetector
 @onready var item_sound = $ItemSound
 @onready var coin_sound = $CoinSound
+@onready var one_up_sound = $OneUpSound
 
 func _ready():
 	# Disable collision during pop-up
@@ -222,6 +223,7 @@ func collect():
 			else:
 				print("ERROR: Could not find player or power_up method!")
 		ItemType.ONE_UP:
+			one_up_sound.play()
 			GameManager.add_life()
 			print("Collected 1-UP!")
 		ItemType.STAR:

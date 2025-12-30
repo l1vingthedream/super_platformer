@@ -23,11 +23,11 @@
 - [x] **Fire Mario transformation and fireballs** - Big Mario collecting fire flower triggers 1-second palette swap transformation animation; Fire Mario shoots bouncing fireballs with X button (contextual: shoots when standing/jumping, runs when moving); fireballs defeat enemies on contact with poof explosion; 2-fireball limit; complete Fire Mario sprite set with throw animation
 - [x] **Player lives system** - GameManager singleton tracks 3 starting lives; life screen displays before gameplay and after each death showing remaining lives with player name; game over screen on 0 lives resets game state; 1UP mushroom increases lives with 1up.wav sound; velocity-based skid animation system
 - [x] **Title screen** - Title screen displays on game start with #9494FF background and title artwork; waits for jump button press before transitioning to life screen; game over returns to title screen; complete scene flow loop implemented
+- [x] **HUD (Heads-Up Display)** - NES-style CanvasLayer HUD with player name (ROCCO), 6-digit score, animated coin counter, world display (1-1), and time countdown (400); manual sprite positioning with 1px letter spacing; two-line layout with labels and values; GameManager signals for real-time updates
 
 ## Pending Features
 - [ ] Support for Points System
 - [ ] Support for increasing Points when Player earns coins through coin-containing box, or collides with coin tiles, or enemy kills
-- [ ] Support HUD that contains points, lives
 - [ ] Support time left to complete level, with countdown displayed in HUD
 - [ ] Use of Pipes to move to a different level
 - [ ] Go to level 1-2

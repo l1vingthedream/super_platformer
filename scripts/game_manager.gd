@@ -7,14 +7,20 @@ const PLAYER_NAME = "ROCCO"
 const STARTING_LIVES = 3
 var current_lives: int = STARTING_LIVES
 
-# Future: Score and coins (implement later)
+# Game state
 var coins: int = 0
 var score: int = 0
+var time: int = 400  # Starting time in seconds
+var world: int = 1
+var level: int = 1
 
 # Signals
 signal player_died(lives_remaining: int)
 signal game_over
 signal life_lost
+signal coin_collected(new_total: int)
+signal score_changed(new_score: int)
+signal time_changed(new_time: int)
 
 func _ready():
 	print("GameManager initialized with ", STARTING_LIVES, " lives")
@@ -24,6 +30,9 @@ func reset_game():
 	current_lives = STARTING_LIVES
 	coins = 0
 	score = 0
+	time = 400
+	world = 1
+	level = 1
 	print("Game state reset")
 
 func decrement_life() -> int:
@@ -47,20 +56,58 @@ func add_life():
 	current_lives += 1
 	print("Extra life! Lives: ", current_lives)
 
+func collect_coin():
+	"""Add a coin and emit signal"""
+	coins += 1
+	emit_signal("coin_collected", coins)
+	add_score(200)  # Each coin is worth 200 points
+
+	# Grant 1UP every 100 coins
+	if coins >= 100 and coins % 100 == 0:
+		add_life()
+
+func add_score(points: int):
+	"""Add points to score and emit signal"""
+	score += points
+	emit_signal("score_changed", score)
+
+func decrement_time():
+	"""Decrease time by 1 and emit signal"""
+	if time > 0:
+		time -= 1
+		emit_signal("time_changed", time)
+
+		if time == 0:
+			# Time up causes death
+			emit_signal("game_over")
+
 func get_letter_region(letter: String) -> Rect2:
-	"""Get the sprite region for a single letter from the HUD sprite sheet"""
-	# Letters are in HUDs_Screens.png at y=105
-	# They start after digits 0-9 (positions 0-9) and special char at position 10
-	# Formula: x = (letter_index + 10) * 9, where A=0, B=1, etc.
-	# Examples: C at 108, O at 216, R at 243
+	"""Get the sprite region for a single letter/number/character from the HUD sprite sheet"""
+	# HUDs_Screens.png layout at y=105:
+	# Positions 0-9: Digits 0-9 (x = digit * 9)
+	# Position 10: Special character "-"
+	# Positions 11+: Letters A-Z (x = (letter_index + 10) * 9)
+	# Examples from existing code: C at 108, O at 216, R at 243
 
-	var upper_letter = letter.to_upper()
-	var letter_code = upper_letter.unicode_at(0)
+	var char = letter.to_upper()
+	var char_code = char.unicode_at(0)
 
-	if letter_code >= 65 and letter_code <= 90:  # A-Z
-		var letter_index = letter_code - 65  # A=0, B=1, etc.
+	# Handle digits 0-9
+	if char_code >= 48 and char_code <= 57:  # 0-9
+		var digit = char_code - 48
+		return Rect2(digit * 9, 105, 8, 8)
+
+	# Handle letters A-Z
+	elif char_code >= 65 and char_code <= 90:  # A-Z
+		var letter_index = char_code - 65  # A=0, B=1, etc.
 		var x = (letter_index + 10) * 9
 		return Rect2(x, 105, 8, 8)
+
+	# Handle special characters
+	elif char == "-":
+		return Rect2(108, 114, 8, 8)  # Dash/hyphen character
+	elif char == " ":
+		return Rect2(0, 0, 8, 8)  # Blank/transparent
 	else:
 		# Return space/blank for unknown characters
 		return Rect2(0, 0, 8, 8)

@@ -1,0 +1,42 @@
+[gd_scene load_steps=3 format=3 uid="uid://b5q8r3k2vx7wn"]
+
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+[ext_resource type="Texture2D" path="res://assets/sprites/HUDs_Screens.png" id="2_huds"]
+
+[node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PlayerNameContainer" type="Node2D" parent="Control"]
+position = Vector2(24, 24)
+
+[node name="ScoreContainer" type="Node2D" parent="Control"]
+position = Vector2(24, 51)
+
+[node name="CoinsContainer" type="Node2D" parent="Control"]
+position = Vector2(320, 51)
+
+[node name="CoinSprite" type="Sprite2D" parent="Control/CoinsContainer"]
+scale = Vector2(3, 3)
+texture = ExtResource("2_huds")
+region_enabled = true
+region_rect = Rect2(0, 156, 8, 8)
+
+[node name="WorldLabelContainer" type="Node2D" parent="Control"]
+position = Vector2(900, 24)
+
+[node name="WorldValueContainer" type="Node2D" parent="Control"]
+position = Vector2(900, 51)
+
+[node name="TimeLabelContainer" type="Node2D" parent="Control"]
+position = Vector2(1050, 24)
+
+[node name="TimeValueContainer" type="Node2D" parent="Control"]
+position = Vector2(1050, 51)

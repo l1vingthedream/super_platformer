@@ -177,4 +177,11 @@ func landing_sequence(player: CharacterBody2D):
 func on_slide_complete():
 	print("DEBUG: Level complete!")
 	await get_tree().create_timer(1.0).timeout
+
+	# Trigger time bonus countdown before reloading
+	var timer_manager = get_parent()  # Main node has timer_manager script
+	if timer_manager.has_method("start_time_bonus_countdown"):
+		await timer_manager.start_time_bonus_countdown()
+
+	# Reload scene after time bonus completes
 	get_tree().reload_current_scene()

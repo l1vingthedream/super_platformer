@@ -28,9 +28,10 @@
 - [x] **Score rewards for player actions** - Points awarded for: coins from question boxes (200 pts), enemy defeats via stomp or fireball, power-up collection, brick breaking; combo system tracks consecutive enemy stomps without touching ground; all score events update HUD in real-time via GameManager signals
 
 ## Pending Features
-- [ ] Support for coin tiles (collectible coins placed in level)
 - [ ] Support time left to complete level, with countdown displayed in HUD
+- [ ] Support for coin tiles (collectible coins placed in level)
 - [ ] Use of Pipes to move to a different level
+- [ ] Various clean-up:  HUD positions, koopa bouncing, mario growth clean, flag clear
 - [ ] Go to level 1-2
 - [ ] Auto-create levels
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://b4xr3dx8pvwxc"]
+[gd_scene load_steps=15 format=4 uid="uid://b4xr3dx8pvwxc"]
 
 [ext_resource type="PackedScene" uid="uid://ckr8qw4nf4qoj" path="res://scenes/player.tscn" id="1_main"]
 [ext_resource type="PackedScene" uid="uid://b5q8r3k2vx7wn" path="res://scenes/hud.tscn" id="2_hud"]
@@ -9,11 +9,15 @@
 [ext_resource type="AudioStream" uid="uid://dnko7yk7lp886" path="res://assets/audio/brick.wav" id="5_brick"]
 [ext_resource type="AudioStream" uid="uid://waggvih8wcs7" path="res://assets/audio/bump.wav" id="5_bump"]
 [ext_resource type="PackedScene" uid="uid://flagpole123" path="res://scenes/flagpole.tscn" id="6_flagpole"]
+[ext_resource type="Script" path="res://scripts/timer_manager.gd" id="7_timer"]
+[ext_resource type="AudioStream" path="res://assets/audio/hurryup.wav" id="8_hurryup"]
 [ext_resource type="PackedScene" uid="uid://bytpmgasg5wji" path="res://scenes/goomba.tscn" id="9_85g3d"]
 [ext_resource type="PackedScene" uid="uid://c7koopa123456" path="res://scenes/koopa.tscn" id="10_choun"]
+[ext_resource type="AudioStream" path="res://assets/audio/coin.wav" id="11_coin"]
 
 [node name="Main" type="Node2D"]
 position = Vector2(2, 0)
+script = ExtResource("7_timer")
 
 [node name="HUD" parent="." instance=ExtResource("2_hud")]
 
@@ -52,6 +56,12 @@ tile_set = ExtResource("4_tileset")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("4_jyhfs")
 autoplay = true
+
+[node name="HurryUpSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_hurryup")
+
+[node name="CoinSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("11_coin")
 
 [node name="Goomba" parent="." instance=ExtResource("9_85g3d")]
 position = Vector2(360, -40)

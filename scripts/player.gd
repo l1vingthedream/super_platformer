@@ -387,6 +387,7 @@ func die():
 	if not music_player:
 		music_player = get_parent().get_node_or_null("AudioStreamPlayer")
 	if music_player:
+		music_player.pitch_scale = 1.0  # Reset pitch before stopping
 		music_player.stop()
 
 	# Play death sound and wait for it to finish (2.7 seconds)

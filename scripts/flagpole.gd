@@ -204,5 +204,5 @@ func on_slide_complete():
 	if timer_manager.has_method("start_time_bonus_countdown"):
 		await timer_manager.start_time_bonus_countdown()
 
-	# Reload scene after time bonus completes
-	get_tree().reload_current_scene()
+	# Advance to next level after time bonus completes
+	LevelManager.advance_to_next_level()

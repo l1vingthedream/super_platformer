@@ -23,4 +23,6 @@ func _input(event):
 	# Wait for jump button press
 	if Input.is_action_just_pressed("jump"):
 		print("Starting game...")
+		GameManager.reset_game()  # Ensure fresh start at 1-1
+		LevelManager.reset_to_start()  # Sync level manager
 		get_tree().change_scene_to_file("res://scenes/life_screen.tscn")

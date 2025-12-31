@@ -20,6 +20,7 @@ func _ready():
 
 	# Reset game state
 	GameManager.reset_game()
+	LevelManager.reset_to_start()  # Ensure LevelManager is synced to 1-1
 
 	# Wait for display duration
 	await get_tree().create_timer(DISPLAY_DURATION).timeout

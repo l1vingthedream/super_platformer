@@ -12,9 +12,9 @@ func _ready():
 	# Display current lives count
 	update_life_display()
 
-	# Wait 2 seconds then return to main scene
+	# Wait 2 seconds then restart current level
 	await get_tree().create_timer(DISPLAY_DURATION).timeout
-	get_tree().change_scene_to_file("res://scenes/main.tscn")
+	LevelManager.restart_current_level()
 
 func update_life_display():
 	"""Update the number sprite to show current lives"""

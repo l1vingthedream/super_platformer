@@ -301,11 +301,16 @@ func on_stomped(player):
 				points = player.bounce_off_enemy()
 
 		State.SHELL_STATIONARY:
-			# Reset timer
-			shell_timer = WAKE_UP_TIME
-			is_shaking = false
-			play_shell_animation()
-			print("DEBUG: Shell timer reset by stomp")
+			# Calculate kick direction based on horizontal offset
+			var direction = sign(global_position.x - player.global_position.x)
+
+			# Tie-breaker: default to right if perfectly centered
+			if direction == 0:
+				direction = 1
+
+			# Kick the shell in calculated direction
+			enter_shell_moving(direction, player.get_instance_id())
+
 			# Apply bounce to player and get points
 			if player.has_method("bounce_off_enemy"):
 				points = player.bounce_off_enemy()

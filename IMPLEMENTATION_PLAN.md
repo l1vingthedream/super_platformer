@@ -32,9 +32,11 @@
 - [x] **Kill Plane system for pit deaths** - Area2D-based kill planes (kill_plane.tscn) placed under pits to detect when player falls; replaces fragile Y-coordinate death checks with precise collision detection; player collision disabled during pipe warps prevents false triggers; reusable scene can be placed anywhere for instant death zones
 - [x] **Refactored secret room with horizontal separation** - Classic Mario design with secret room at x=5000+ instead of vertical separation; camera limits (limit_left/limit_right) constrain viewing area; simplified camera logic eliminates transition zones and Y-axis following; black ColorRect background for underground areas; supports unlimited secret rooms at different X positions; scalable architecture for level expansion
 - [x] **Persistent top score system** - GameManager tracks all-time high score with automatic save/load to user://top_score.dat binary file; updates when game ends if current score exceeds top score; displays on title screen using reusable HUD sprite rendering (6-digit format with leading zeros); persists through game restarts; reuses GameManager.create_text_sprites() for consistent rendering
+- [x] **Shell stomping kick behavior** - Stomping a stationary Koopa shell activates it with directional physics based on player position; horizontal offset calculation (sign(shell.x - player.x)) determines kick direction; tie-breaker defaults to right if perfectly centered; player receives 0.2s kick immunity; creates authentic Super Mario Bros. shell dynamics with emergent gameplay and chain reactions
+- [x] **Growth animation sprite alignment** - Dynamic sprite Y-offset during small-to-big transformation keeps sprite bottom at consistent height; frame_changed signal handler calculates offset based on sprite height (16px→+8px, 24px→+4px, 32px→0px); eliminates visual sinking/floating effect during growth; works correctly whether player is on ground, jumping, or falling; sprite position resets to default after animation completes
 
 ## Pending Features
-- [ ] Various clean-up: koopa bouncing, mario growth clean, flag clear, camera freeze at fire animation, player select, level in load screen, sound on koopa bounce, shrink sound.
+- [ ] Various clean-up: flag clear, camera freeze at fire animation, player select, level in load screen, shrink sound.
 - [ ] Go to level 1-2
 - [ ] Auto-create levels
 

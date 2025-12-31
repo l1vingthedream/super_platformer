@@ -79,6 +79,9 @@ func _ready():
 	# Ensure collision box is correct size for current state
 	resize_collision_box(current_power_state)
 
+	# Connect to sprite frame changes for growth animation positioning fix
+	animated_sprite.frame_changed.connect(_on_sprite_frame_changed)
+
 func power_up(new_state: PowerUpState):
 	# Ignore if already at or above this state
 	if current_power_state >= new_state:
@@ -117,7 +120,30 @@ func play_growth_animation():
 	await animated_sprite.animation_finished
 	print("DEBUG: Growth animation finished")
 	is_growing = false
+
+	# Reset sprite position to default (centered)
+	animated_sprite.position.y = 0
+
 	resize_collision_box(PowerUpState.BIG)
+
+func _on_sprite_frame_changed():
+	"""Adjust sprite Y offset during growth animation to keep bottom aligned"""
+	# Only adjust during growth animation
+	if not is_growing:
+		return
+
+	# Get current frame's texture to determine height
+	var current_texture = animated_sprite.sprite_frames.get_frame_texture(animated_sprite.animation, animated_sprite.frame)
+	if current_texture and current_texture is AtlasTexture:
+		var sprite_height = current_texture.region.size.y
+		var target_height = 32  # Big Mario height
+
+		# Calculate offset to keep bottom of sprite at same position
+		# Smaller sprites need to be pushed down
+		var offset_y = (target_height - sprite_height) / 2.0
+		animated_sprite.position.y = offset_y
+
+		print("DEBUG: Growth frame height=%d, offset_y=%d" % [sprite_height, offset_y])
 
 func play_fire_transformation():
 	"""Palette swap animation for BIG → FIRE transformation"""

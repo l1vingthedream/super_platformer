@@ -35,9 +35,10 @@
 - [x] **Shell stomping kick behavior** - Stomping a stationary Koopa shell activates it with directional physics based on player position; horizontal offset calculation (sign(shell.x - player.x)) determines kick direction; tie-breaker defaults to right if perfectly centered; player receives 0.2s kick immunity; creates authentic Super Mario Bros. shell dynamics with emergent gameplay and chain reactions
 - [x] **Growth animation sprite alignment** - Dynamic sprite Y-offset during small-to-big transformation keeps sprite bottom at consistent height; frame_changed signal handler calculates offset based on sprite height (16px→+8px, 24px→+4px, 32px→0px); eliminates visual sinking/floating effect during growth; works correctly whether player is on ground, jumping, or falling; sprite position resets to default after animation completes
 - [x] **Shrink sound on damage** - Plays pipepowerdown.wav sound effect when player takes damage and shrinks from BIG or FIRE state to SMALL state; sound plays during shrink animation freeze; provides audio feedback for power-down event
+- [x] **Flagpole completion positioning and animation** - Power-state aware positioning during flag slide and landing sequence; small Mario slide target at y=-64, big Mario at y=-72 to keep feet at consistent height above ground; landing positions adjusted (small: -56, big: -64) for proper ground contact; walk animation stops and plays idle when reaching castle destination
 
 ## Pending Features
-- [ ] Various clean-up: flag clear, camera freeze at fire animation, player select, level in load screen.
+- [ ] Various clean-up: camera freeze at fire animation, player select, level in load screen.
 - [ ] Go to level 1-2
 - [ ] Auto-create levels
 

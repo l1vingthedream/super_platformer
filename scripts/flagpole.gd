@@ -34,7 +34,17 @@ func start_slide_sequence(player: CharacterBody2D):
 
 	# Calculate slide parameters
 	var player_start_y = player.global_position.y
-	var slide_target_y = -88.0  # Stop 40 pixels above ground tile at y=-48
+
+	# Calculate slide target Y based on power state to keep feet at consistent height
+	# Ground is at y=-48. Small Mario collision box is 16 tall (8 from center to bottom)
+	# Big Mario collision box is 32 tall (16 from center to bottom)
+	# Slide should end with feet 8 pixels above ground for both sizes
+	var slide_target_y: float
+	if player.current_power_state == player.PowerUpState.SMALL:
+		slide_target_y = -64.0  # Small Mario: -56 would be on ground, -64 is 8px above
+	else:
+		slide_target_y = -72.0  # Big Mario: -64 would be on ground, -72 is 8px above
+
 	var slide_distance = abs(slide_target_y - player_start_y)
 	var actual_duration = max(1.0, slide_distance / SLIDE_SPEED)
 
@@ -132,18 +142,25 @@ func landing_sequence(player: CharacterBody2D):
 	var jump_tween = create_tween()
 	jump_tween.set_parallel(true)
 
+	# Calculate landing Y based on power state
+	var landing_y: float
+	if player.current_power_state == player.PowerUpState.SMALL:
+		landing_y = -56.0  # Small Mario feet on ground
+	else:
+		landing_y = -64.0  # Big Mario feet on ground
+
 	# Jump arc: up then down
 	jump_tween.tween_property(
 		player,
 		"global_position:y",
-		-120.0,  # Jump up 32 pixels
+		landing_y - 64.0,  # Jump up 64 pixels from landing position
 		0.3
 	).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_QUAD)
 
 	jump_tween.chain().tween_property(
 		player,
 		"global_position:y",
-		-48.0,  # Land on ground
+		landing_y,  # Land on ground (power-state aware)
 		0.3
 	).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 
@@ -170,6 +187,9 @@ func landing_sequence(player: CharacterBody2D):
 	)
 
 	await walk_tween.finished
+
+	# Stop walking and stand still at destination
+	player.get_node("AnimatedSprite2D").play(player.get_animation_name("idle"))
 
 	# Complete level
 	on_slide_complete()

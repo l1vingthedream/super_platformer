@@ -208,12 +208,6 @@ func get_animation_name(base_name: String) -> String:
 			return base_name
 
 func _physics_process(delta):
-	# Check for death (falling into pit below playable areas)
-	# Threshold set to 500 to accommodate secret room at y=100-400
-	if not is_dead and global_position.y > 500:
-		die()
-		return
-
 	if not is_on_floor():
 		velocity.y += gravity * delta
 

@@ -35,15 +35,15 @@ func start_slide_sequence(player: CharacterBody2D):
 	# Calculate slide parameters
 	var player_start_y = player.global_position.y
 
-	# Calculate slide target Y based on power state to keep feet at consistent height
-	# Ground is at y=-48. Small Mario collision box is 16 tall (8 from center to bottom)
-	# Big Mario collision box is 32 tall (16 from center to bottom)
-	# Slide should end with feet 8 pixels above ground for both sizes
+	# Calculate slide target Y based on power state
+	# Target: bottom of player at y=-32
+	# Small Mario collision box is 16 tall (8 from center to bottom): center at -32-8 = -40
+	# Big Mario collision box is 32 tall (16 from center to bottom): center at -32-16 = -48
 	var slide_target_y: float
 	if player.current_power_state == player.PowerUpState.SMALL:
-		slide_target_y = -64.0  # Small Mario: -56 would be on ground, -64 is 8px above
+		slide_target_y = -40.0  # Small Mario center position (bottom at -32)
 	else:
-		slide_target_y = -72.0  # Big Mario: -64 would be on ground, -72 is 8px above
+		slide_target_y = -48.0  # Big Mario center position (bottom at -32)
 
 	var slide_distance = abs(slide_target_y - player_start_y)
 	var actual_duration = max(1.0, slide_distance / SLIDE_SPEED)
@@ -143,11 +143,12 @@ func landing_sequence(player: CharacterBody2D):
 	jump_tween.set_parallel(true)
 
 	# Calculate landing Y based on power state
+	# Target: bottom of player at y=-32
 	var landing_y: float
 	if player.current_power_state == player.PowerUpState.SMALL:
-		landing_y = -56.0  # Small Mario feet on ground
+		landing_y = -40.0  # Small Mario center position (bottom at -32)
 	else:
-		landing_y = -64.0  # Big Mario feet on ground
+		landing_y = -48.0  # Big Mario center position (bottom at -32)
 
 	# Jump arc: up then down
 	jump_tween.tween_property(

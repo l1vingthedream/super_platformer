@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://pipe_warp_scene"]
+
+[ext_resource type="Script" path="res://scripts/pipe.gd" id="1_pipe_script"]
+[ext_resource type="AudioStream" path="res://assets/audio/pipepowerdown.wav" id="3_pipe_sound"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pipe"]
+size = Vector2(32, 32)
+
+[node name="Pipe" type="Area2D"]
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_pipe_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0)
+shape = SubResource("RectangleShape2D_pipe")
+debug_color = Color(0, 0.6, 0.7, 0.42)
+
+[node name="PipeSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_pipe_sound")

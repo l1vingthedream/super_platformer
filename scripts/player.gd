@@ -40,6 +40,9 @@ var is_dead = false
 # Flagpole sliding system
 var is_sliding = false
 
+# Pipe warp system
+var is_entering_pipe = false  # True when player is warping through pipe
+
 # Damage system
 var is_invulnerable = false
 const INVULNERABILITY_DURATION = 2.0  # Seconds of invincibility after taking damage
@@ -205,8 +208,9 @@ func get_animation_name(base_name: String) -> String:
 			return base_name
 
 func _physics_process(delta):
-	# Check for death (top of sprite below y=0)
-	if not is_dead and global_position.y > 8:
+	# Check for death (falling into pit below playable areas)
+	# Threshold set to 500 to accommodate secret room at y=100-400
+	if not is_dead and global_position.y > 500:
 		die()
 		return
 
@@ -240,6 +244,11 @@ func _physics_process(delta):
 	# Control locking during death sequence
 	if is_dead:
 		# No control during death - death animation handles everything
+		return
+
+	# Control locking during pipe warp
+	if is_entering_pipe:
+		# No control during pipe sequence - pipe script handles movement
 		return
 
 	# Track jump hold time
@@ -412,6 +421,29 @@ func die():
 		# No lives left - game over
 		print("DEBUG: No lives remaining, game over")
 		get_tree().change_scene_to_file("res://scenes/game_over_screen.tscn")
+
+func enter_pipe():
+	"""Called by pipe when warp sequence starts"""
+	is_entering_pipe = true
+	velocity = Vector2.ZERO
+
+	# Disable collision so player can pass through pipe walls
+	collision_layer = 0
+	collision_mask = 0
+
+	# Lower z-index so player renders behind pipe tiles
+	z_index = -1
+
+func exit_pipe():
+	"""Called by pipe when warp sequence completes"""
+	is_entering_pipe = false
+
+	# Re-enable collision
+	collision_layer = 1  # Player layer
+	collision_mask = 2   # World layer
+
+	# Restore z-index to render above tiles
+	z_index = 1
 
 func bounce_off_enemy() -> int:
 	"""Apply upward bounce when player stomps on enemy and award combo points"""

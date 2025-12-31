@@ -31,7 +31,7 @@
 
 ## Pending Features
 - [ ] Use of Pipes to move to a different location or level
-- [ ] Various clean-up:  HUD positions, koopa bouncing, mario growth clean, flag clear
+- [ ] Various clean-up:  HUD positions, koopa bouncing, mario growth clean, flag clear, camera freeze at fire animation, player select, top score retention in a data file, level in load screen, sound on koopa bounce, shrink sound.
 - [ ] Go to level 1-2
 - [ ] Auto-create levels
 

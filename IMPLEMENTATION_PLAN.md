@@ -28,9 +28,9 @@
 - [x] **Score rewards for player actions** - Points awarded for: coins from question boxes (200 pts), enemy defeats via stomp or fireball, power-up collection, brick breaking; combo system tracks consecutive enemy stomps without touching ground; all score events update HUD in real-time via GameManager signals
 - [x] **Countdown timer system** - Classic Mario-style timer starts at 400, decrements every 0.6 seconds; hurry-up warning at 100 seconds plays sound and speeds music to 1.5x pitch; instant death at 0 seconds; level completion converts remaining time to bonus points (50 per second) with visual countdown animation and coin sound feedback
 - [x] **Collectible coin tiles** - Area2D-based coin scene (coin.tscn) with 4-frame spinning animation; player walks through to collect; plays coin.wav sound, increments HUD counter, awards 200 points; question box coins also increment counter; 100-coin bonus triggers 1-UP; double-collection prevention via immediate sprite hide and collision disable
+- [x] **Pipe transportation system** - Same-scene warp pipes with move_down input action (S/Down Arrow); invisible trigger zones (pipe.tscn) overlaid on painted pipe tiles; supports vertical (up/down) and horizontal (left/right) pipe directions; player state locking during warp with z-index changes to render behind pipes; smooth tween entry/exit animations; camera follows player Y-axis during transition; bi-directional warping between main level and secret room (y=100-400); black ColorRect background for underground areas; pit death threshold adjusted to y>500
 
 ## Pending Features
-- [ ] Use of Pipes to move to a different location or level
 - [ ] Various clean-up:  HUD positions, koopa bouncing, mario growth clean, flag clear, camera freeze at fire animation, player select, top score retention in a data file, level in load screen, sound on koopa bounce, shrink sound.
 - [ ] Go to level 1-2
 - [ ] Auto-create levels

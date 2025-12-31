@@ -19,7 +19,7 @@
 [ext_resource type="PackedScene" path="res://scenes/kill_plane.tscn" id="17_muem4"]
 
 [node name="Main" type="Node2D"]
-position = Vector2(2, 0)
+position = Vector2(4, 0)
 script = ExtResource("7_timer")
 
 [node name="HUD" parent="." instance=ExtResource("2_hud")]

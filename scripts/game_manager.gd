@@ -10,6 +10,8 @@ var current_lives: int = STARTING_LIVES
 # Game state
 var coins: int = 0
 var score: int = 0
+var top_score: int = 0  # Persistent high score
+var save_file_path: String = "user://top_score.dat"  # Save file path
 var time: int = 400  # Starting time in seconds
 var world: int = 1
 var level: int = 1
@@ -24,6 +26,7 @@ signal time_changed(new_time: int)
 
 func _ready():
 	print("GameManager initialized with ", STARTING_LIVES, " lives")
+	load_top_score()
 
 func reset_game():
 	"""Reset all game state to starting values"""
@@ -70,6 +73,37 @@ func add_score(points: int):
 	"""Add points to score and emit signal"""
 	score += points
 	emit_signal("score_changed", score)
+
+func update_top_score():
+	"""Check if current score is a new top score and save if so"""
+	if score > top_score:
+		top_score = score
+		save_top_score()
+		print("New top score: ", top_score)
+
+func save_top_score():
+	"""Save top score to persistent storage"""
+	var file = FileAccess.open(save_file_path, FileAccess.WRITE)
+	if file:
+		file.store_32(top_score)
+		file.close()
+		print("Top score saved: ", top_score)
+	else:
+		print("ERROR: Could not save top score")
+
+func load_top_score():
+	"""Load top score from persistent storage"""
+	if FileAccess.file_exists(save_file_path):
+		var file = FileAccess.open(save_file_path, FileAccess.READ)
+		if file:
+			top_score = file.get_32()
+			file.close()
+			print("Top score loaded: ", top_score)
+		else:
+			print("ERROR: Could not load top score")
+	else:
+		print("No saved top score found, starting at 0")
+		top_score = 0
 
 func decrement_time():
 	"""Decrease time by 1 and emit signal"""

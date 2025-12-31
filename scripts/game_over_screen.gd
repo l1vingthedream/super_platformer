@@ -15,6 +15,9 @@ func _ready():
 	# Disable input during display
 	set_process_input(false)
 
+	# Update top score before resetting
+	GameManager.update_top_score()
+
 	# Reset game state
 	GameManager.reset_game()
 

@@ -15,13 +15,13 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="PlayerNameContainer" type="Node2D" parent="Control"]
-position = Vector2(24, 24)
+position = Vector2(330, 51)
 
 [node name="ScoreContainer" type="Node2D" parent="Control"]
-position = Vector2(24, 51)
+position = Vector2(320, 78)
 
 [node name="CoinsContainer" type="Node2D" parent="Control"]
-position = Vector2(320, 51)
+position = Vector2(520, 78)
 
 [node name="CoinSprite" type="Sprite2D" parent="Control/CoinsContainer"]
 scale = Vector2(3, 3)
@@ -30,13 +30,13 @@ region_enabled = true
 region_rect = Rect2(0, 156, 8, 8)
 
 [node name="WorldLabelContainer" type="Node2D" parent="Control"]
-position = Vector2(900, 24)
+position = Vector2(700, 51)
 
 [node name="WorldValueContainer" type="Node2D" parent="Control"]
-position = Vector2(900, 51)
+position = Vector2(700, 78)
 
 [node name="TimeLabelContainer" type="Node2D" parent="Control"]
-position = Vector2(1050, 24)
+position = Vector2(900, 51)
 
 [node name="TimeValueContainer" type="Node2D" parent="Control"]
-position = Vector2(1050, 51)
+position = Vector2(900, 78)

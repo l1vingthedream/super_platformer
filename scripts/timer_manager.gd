@@ -7,7 +7,7 @@ extends Node
 const TIMER_INTERVAL = 0.6  # Decrement every 0.6 seconds (game second)
 const WARNING_TIME = 100  # Trigger hurry-up at this time
 const MUSIC_HURRY_PITCH = 1.5  # Music speed multiplier for hurry-up
-const BONUS_TICK_INTERVAL = 0.04  # Time bonus countdown speed (25 ticks/second)
+const BONUS_TICK_INTERVAL = 0.01  # Time bonus countdown speed (100 ticks/second)
 const BONUS_POINTS_PER_TICK = 50  # Points awarded per time unit
 
 # State
@@ -84,14 +84,16 @@ func start_time_bonus_countdown():
 		return
 
 	# Visual countdown loop: decrement time, add points, play sound
+	var tick_count = 0
 	while remaining_time > 0:
 		GameManager.decrement_time()  # Updates HUD automatically via signal
 		GameManager.add_score(BONUS_POINTS_PER_TICK)
 
-		# Play coin sound for each tick (if not already playing to avoid spam)
-		if coin_sound and not coin_sound.playing:
+		# Play coin sound every 3 ticks for rapid coin collection effect
+		if tick_count % 3 == 0 and coin_sound:
 			coin_sound.play()
 
+		tick_count += 1
 		remaining_time -= 1
 		await get_tree().create_timer(BONUS_TICK_INTERVAL).timeout
 
